@@ -3,20 +3,12 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>SkyTop VPN</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        :root {
-            --tg-theme-bg-color: #1a1a1a;
-            --tg-theme-text-color: #ffffff;
-            --tg-theme-button-color: #3390ec;
-            --tg-theme-button-text-color: #ffffff;
-        }
-
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: var(--tg-theme-bg-color);
-            color: var(--tg-theme-text-color);
+            background-color: #f4f4f7; /* Светлый фон как в оригинале */
+            color: #000;
             margin: 0;
             padding: 20px;
             display: flex;
@@ -24,120 +16,176 @@
             align-items: center;
         }
 
-        .header {
-            margin-bottom: 30px;
+        /* Блок баланса */
+        .balance-container {
             text-align: center;
+            margin: 40px 0;
         }
 
-        .header h1 {
-            font-size: 24px;
-            margin: 10px 0;
+        .balance-amount {
+            font-size: 48px;
+            font-weight: bold;
+            margin-bottom: 5px;
         }
 
-        .card {
-            background: #2c2c2c;
-            border-radius: 20px;
-            padding: 20px;
+        .balance-days {
+            color: #8e8e93;
+            font-size: 16px;
+        }
+
+        /* Сетка кнопок (теперь одна кнопка на всю ширину) */
+        .actions-grid {
             width: 100%;
-            max-width: 350px;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.4);
-            border: 1px solid #3d3d3d;
+            max-width: 400px;
+            margin-bottom: 25px;
         }
 
-        .status-row {
+        .btn-main {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: #007aff; /* Синий цвет как у них */
+            font-weight: 500;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            border: none;
+            width: 100%;
+            cursor: pointer;
+        }
+
+        .btn-main .icon {
+            font-size: 24px;
+            margin-bottom: 8px;
+            background: #eef6ff;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+
+        /* Список устройств */
+        .section-card {
+            background: white;
+            border-radius: 20px;
+            width: 100%;
+            max-width: 400px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            box-sizing: border-box;
+        }
+
+        .section-header {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 15px;
+            align-items: center;
+            margin-bottom: 20px;
         }
 
-        .status-active {
-            color: #4caf50;
+        .section-title {
+            font-size: 18px;
             font-weight: bold;
         }
 
-        .vpn-key-container {
-            background: #121212;
-            padding: 15px;
-            border-radius: 10px;
-            font-family: monospace;
-            font-size: 12px;
-            word-break: break-all;
-            border: 1px solid #444;
-            margin: 15px 0;
-            color: #aaa;
-        }
-
-        .btn {
-            background-color: var(--tg-theme-button-color);
-            color: var(--tg-theme-button-text-color);
+        .btn-add {
+            color: #007aff;
+            background: #f0f7ff;
             border: none;
-            padding: 15px;
-            border-radius: 12px;
-            width: 100%;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: opacity 0.2s;
+            padding: 8px 15px;
+            border-radius: 10px;
+            font-weight: 600;
         }
 
-        .btn:active {
-            opacity: 0.8;
+        .device-item {
+            display: flex;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid #f0f0f0;
         }
 
-        .footer-text {
-            font-size: 12px;
-            color: #777;
-            margin-top: 20px;
+        .device-item:last-child { border-bottom: none; }
+
+        .device-icon {
+            width: 40px;
+            height: 40px;
+            background: #000;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            color: white;
+        }
+
+        .device-info { flex-grow: 1; }
+
+        .device-name { font-weight: 500; font-size: 16px; }
+
+        .device-date { color: #8e8e93; font-size: 14px; margin-top: 4px; }
+
+        .tariff-info {
             text-align: center;
+            color: #8e8e93;
+            font-size: 14px;
+            margin-top: 20px;
         }
     </style>
 </head>
 <body>
 
-    <div class="header">
-        <h1>SkyTop VPN</h1>
+    <div class="balance-container">
+        <div class="balance-amount">0 ₽</div>
+        <div class="balance-days">Хватит на ≈0 дней</div>
     </div>
 
-    <div class="card">
-        <div class="status-row">
-            <span>Статус:</span>
-            <span class="status-active">Подключено</span>
-        </div>
-        <div class="status-row">
-            <span>Тариф:</span>
-            <span>Premium 30 дней</span>
-        </div>
-        
-        <div class="vpn-key-container" id="vpn-key">
-            hitvpn://vless://uuid-будет-тут@ip:port?security=reality&sni=google.com&fp=chrome&type=grpc&serviceName=grpc#SkyTop_VPN
-        </div>
-
-        <button class="btn" onclick="copyKey()">Копировать ключ</button>
+    <div class="actions-grid">
+        <button class="btn-main" onclick="topUp()">
+            <div class="icon">+</div>
+            Пополнить
+        </button>
     </div>
 
-    <p class="footer-text">Нажмите кнопку, чтобы скопировать ключ и вставить его в приложение V2Ray или Streisand</p>
+    <div class="section-card">
+        <div class="section-header">
+            <div>
+                <div class="section-title">Мои устройства</div>
+                <div style="color: #8e8e93; font-size: 14px;">Подключено: 1</div>
+            </div>
+            <button class="btn-add" onclick="addDevice()">Добавить</button>
+        </div>
+
+        <div class="device-item">
+            <div class="device-icon">📱</div>
+            <div class="device-info">
+                <div class="device-name">Основное устройство</div>
+                <div class="device-date">11.02.26</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="tariff-info">
+        Тариф 100₽/мес за одно устройство
+    </div>
 
     <script>
-        // Инициализация Telegram Mini App
         const tg = window.Telegram.WebApp;
-        tg.expand(); // Расширить на всё окно
+        tg.expand();
 
-        function copyKey() {
-            const keyText = document.getElementById('vpn-key').innerText;
-            
-            // Копирование в буфер обмена
-            navigator.clipboard.writeText(keyText).then(() => {
-                // Показываем уведомление внутри Telegram
-                tg.showAlert("Ключ успешно скопирован! Теперь вставьте его в ваше VPN-приложение.");
-                
-                // Легкая вибрация телефона (если поддерживается)
-                tg.HapticFeedback.impactOccurred('medium');
-            });
+        function topUp() {
+            tg.showAlert("Переход к оплате...");
         }
 
-        // Устанавливаем цвет кнопки из темы Telegram
-        tg.MainButton.setText("ЗАКРЫТЬ");
-        tg.MainButton.hide(); 
+        function addDevice() {
+            tg.showPopup({
+                title: 'Новое устройство',
+                message: 'Хотите добавить еще одно устройство за 100₽/мес?',
+                buttons: [{text: 'Да', type: 'default'}, {text: 'Отмена', type: 'destructive'}]
+            });
+        }
     </script>
 </body>
 </html>
