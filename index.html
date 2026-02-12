@@ -5,170 +5,44 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: #f4f4f7; /* Светлый фон как в оригинале */
-            color: #000;
-            margin: 0;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        /* Блок баланса */
-        .balance-container {
-            text-align: center;
-            margin: 40px 0;
-        }
-
-        .balance-amount {
-            font-size: 48px;
-            font-weight: bold;
-            margin-bottom: 5px;
-        }
-
-        .balance-days {
-            color: #8e8e93;
-            font-size: 16px;
-        }
-
-        /* Сетка кнопок (теперь одна кнопка на всю ширину) */
-        .actions-grid {
-            width: 100%;
-            max-width: 400px;
-            margin-bottom: 25px;
-        }
-
-        .btn-main {
-            background: white;
-            border-radius: 15px;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-decoration: none;
-            color: #007aff; /* Синий цвет как у них */
-            font-weight: 500;
+        body { font-family: sans-serif; background-color: #f4f4f7; padding: 20px; display: flex; flex-direction: column; align-items: center; }
+        .balance-container { text-align: center; margin: 40px 0; }
+        .balance-amount { font-size: 48px; font-weight: bold; }
+        .actions-grid { width: 100%; max-width: 400px; }
+        .btn-main { 
+            background: white; border-radius: 15px; padding: 20px; width: 100%;
+            color: #007aff; font-weight: bold; border: none; cursor: pointer;
             box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-            border: none;
-            width: 100%;
-            cursor: pointer;
         }
-
-        .btn-main .icon {
-            font-size: 24px;
-            margin-bottom: 8px;
-            background: #eef6ff;
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-        }
-
-        /* Список устройств */
-        .section-card {
-            background: white;
-            border-radius: 20px;
-            width: 100%;
-            max-width: 400px;
-            padding: 20px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-            box-sizing: border-box;
-        }
-
-        .section-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        .section-title {
-            font-size: 18px;
-            font-weight: bold;
-        }
-
-        .btn-add {
-            color: #007aff;
-            background: #f0f7ff;
-            border: none;
-            padding: 8px 15px;
-            border-radius: 10px;
-            font-weight: 600;
-        }
-
-        .device-item {
-            display: flex;
-            align-items: center;
-            padding: 15px 0;
-            border-bottom: 1px solid #f0f0f0;
-        }
-
-        .device-item:last-child { border-bottom: none; }
-
-        .device-icon {
-            width: 40px;
-            height: 40px;
-            background: #000;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-right: 15px;
-            color: white;
-        }
-
-        .device-info { flex-grow: 1; }
-
-        .device-name { font-weight: 500; font-size: 16px; }
-
-        .device-date { color: #8e8e93; font-size: 14px; margin-top: 4px; }
-
-        .tariff-info {
-            text-align: center;
-            color: #8e8e93;
-            font-size: 14px;
-            margin-top: 20px;
-        }
+        .section-card { background: white; border-radius: 20px; width: 100%; max-width: 400px; padding: 20px; box-sizing: border-box; }
+        .btn-add { color: #007aff; background: #f0f7ff; border: none; padding: 8px 15px; border-radius: 10px; font-weight: 600; }
     </style>
 </head>
 <body>
 
     <div class="balance-container">
         <div class="balance-amount">0 ₽</div>
-        <div class="balance-days">Хватит на ≈0 дней</div>
+        <div class="balance-days">Обновите подписку</div>
     </div>
 
     <div class="actions-grid">
-        <button class="btn-main" onclick="topUp()">
-            <div class="icon">+</div>
-            Пополнить
-        </button>
+        <button class="btn-main" onclick="topUp()">+ Пополнить</button>
     </div>
+
+    <br>
 
     <div class="section-card">
-        <div class="section-header">
-            <div>
-                <div class="section-title">Мои устройства</div>
-                <div style="color: #8e8e93; font-size: 14px;">Подключено: 1</div>
-            </div>
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span style="font-weight: bold;">Мои устройства</span>
             <button class="btn-add" onclick="addDevice()">Добавить</button>
         </div>
-
-        <div class="device-item">
-            <div class="device-icon">📱</div>
-            <div class="device-info">
-                <div class="device-name">Основное устройство</div>
-                <div class="device-date">11.02.26</div>
+        <div style="margin-top: 15px; display: flex; align-items: center;">
+            <span style="font-size: 24px; margin-right: 10px;">📱</span>
+            <div>
+                <div>Основное устройство</div>
+                <div style="color: gray; font-size: 12px;">Нажмите пополнить для продления</div>
             </div>
         </div>
-    </div>
-
-    <div class="tariff-info">
-        Тариф 100₽/мес за одно устройство
     </div>
 
     <script>
@@ -176,14 +50,19 @@
         tg.expand();
 
         function topUp() {
-            tg.showAlert("Переход к оплате...");
+            // ОТПРАВЛЯЕМ СИГНАЛ БОТУ
+            tg.sendData("pay_100");
+            // ЗАКРЫВАЕМ ОКНО
+            tg.close();
         }
 
         function addDevice() {
             tg.showPopup({
                 title: 'Новое устройство',
-                message: 'Хотите добавить еще одно устройство за 100₽/мес?',
-                buttons: [{text: 'Да', type: 'default'}, {text: 'Отмена', type: 'destructive'}]
+                message: 'Добавить еще одно устройство за 100₽?',
+                buttons: [{id: 'ok', text: 'Да', type: 'default'}, {text: 'Нет', type: 'destructive'}]
+            }, (id) => {
+                if (id === 'ok') topUp();
             });
         }
     </script>
