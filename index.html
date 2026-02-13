@@ -1,23 +1,105 @@
+> .:
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        body { font-family: -apple-system, sans-serif; background: #f4f4f7; padding: 20px; display: flex; flex-direction: column; align-items: center; }
-        .card { background: white; border-radius: 20px; width: 100%; max-width: 400px; padding: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
-        h3 { margin-bottom: 20px; text-align: center; }
-        .method { 
-            display: flex; align-items: center; padding: 15px; border: 2px solid #f0f0f0; 
-            border-radius: 12px; margin-bottom: 12px; cursor: pointer; transition: 0.2s;
+        :root {
+            --tg-theme-bg-color: #f4f4f7;
+            --tg-theme-text-color: #000000;
+            --tg-theme-secondary-bg-color: #ffffff;
+            --tg-theme-button-color: #007aff;
+            --tg-theme-button-text-color: #ffffff;
         }
-        .method:active { transform: scale(0.98); }
-        .method.selected { border-color: #007aff; background: #f0f7ff; }
-        .icon { font-size: 24px; margin-right: 15px; }
-        .btn-pay { 
-            background: #007aff; color: white; border: none; width: 100%; 
-            padding: 18px; border-radius: 12px; font-weight: bold; font-size: 16px; margin-top: 10px;
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--tg-theme-bg-color);
+            color: var(--tg-theme-text-color);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .card {
+            background: var(--tg-theme-secondary-bg-color);
+            border-radius: 20px;
+            width: 100%;
+            max-width: 420px;
+            padding: 24px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+        h3 {
+            margin: 0 0 24px;
+            text-align: center;
+            font-size: 22px;
+            font-weight: 600;
+        }
+        .amount-container {
+            margin-bottom: 24px;
+        }
+        .input-amount {
+            width: 100%;
+            padding: 16px;
+            font-size: 24px;
+            text-align: center;
+            border: 2px solid #e0e0e0;
+            border-radius: 16px;
+            background: white;
+            transition: border-color 0.2s;
+        }
+        .input-amount:focus {
+            outline: none;
+            border-color: var(--tg-theme-button-color);
+        }
+        .method {
+            display: flex;
+            align-items: center;
+            padding: 16px;
+            border: 2px solid #e8e8e8;
+            border-radius: 16px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            user-select: none;
+        }
+        .method:active {
+            transform: scale(0.98);
+        }
+        .method.selected {
+            border-color: var(--tg-theme-button-color);
+            background: rgba(0,122,255,0.08);
+        }
+        .icon {
+            font-size: 28px;
+            margin-right: 16px;
+            min-width: 32px;
+        }
+        .method-text b {
+            font-size: 17px;
+        }
+        .method-text small {
+            color: #8e8e93;
+            font-size: 13px;
+        }
+        .btn-pay {
+            background: var(--tg-theme-button-color);
+            color: var(--tg-theme-button-text-color);
+            border: none;
+            width: 100%;
+            padding: 18px;
+            border-radius: 16px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 16px;
+            transition: opacity 0.2s;
+        }
+        .btn-pay:active {
+            opacity: 0.9;
         }
     </style>
 </head>
@@ -25,31 +107,76 @@
 
     <div class="card">
         <h3>Пополнение баланса</h3>
-        <div class="method" onclick="select(this, 'sbp')">
+
+        <div class="amount-container">
+            <input type="number" id="amount" class="input-amount" value="100" min="10" step="1" placeholder="Сумма в ₽">
+        </div>
+
+        <div class="method selected" data-method="sbp">
             <span class="icon">🚀</span>
-            <div><b>СБП</b><br><small>Мгновенно через приложение банка</small></div>
+            <div class="method-text">
+                <b>СБП</b><br>
+                <small>Мгновенно через приложение банка</small>
+            </div>
         </div>
-        <div class="method" onclick="select(this, 'card')">
+
+        <div class="method" data-method="card">
             <span class="icon">💳</span>
-            <div><b>Оплата картой</b><br><small>Любые банки РФ</small></div>
+            <div class="method-text">
+                <b>Оплата картой</b><br>
+                <small>Любые банки РФ</small>
+            </div>
         </div>
-        <button class="btn-pay" onclick="send()">Оплатить 100 ₽</button>
+
+        <button class="btn-pay" id="payButton">Оплатить 100 ₽</button>
     </div>
 
     <script>
         const tg = window.Telegram.WebApp;
+        tg.ready();
+        tg.expand();
+
         let selectedMethod = 'sbp';
+        const amountInput = document.
 
-        function select(el, method) {
-            document.querySelectorAll('.method').forEach(m => m.classList.remove('selected'));
-            el.classList.add('selected');
-            selectedMethod = method;
+> .:
+getElementById('amount');
+        const payButton = document.getElementById('payButton');
+
+        // Выбор метода
+        document.querySelectorAll('.method').forEach(el => {
+            el.addEventListener('click', () => {
+                document.querySelectorAll('.method').forEach(m => m.classList.remove('selected'));
+                el.classList.add('selected');
+                selectedMethod = el.dataset.method;
+            });
+        });
+
+        // Обновление текста кнопки при вводе суммы
+        function updateButtonText() {
+            const val = amountInput.value.trim();
+            payButton.textContent = val ? Оплатить ${val} ₽ : 'Оплатить';
         }
 
-        function send() {
-            tg.sendData(selectedMethod);
+        amountInput.addEventListener('input', updateButtonText);
+        updateButtonText();
+
+        // Отправка данных
+        payButton.addEventListener('click', () => {
+            const amount = amountInput.value.trim();
+            if (!amount⠺⠺⠟⠟⠺⠟⠵⠟⠟⠞⠵⠵⠟⠟⠞⠵⠟parseFloat(amount) < 10) {
+                tg.showAlert('Введите корректную сумму (минимум 10 ₽)');
+                return;
+            }
+
+            const payload = {
+                method: selectedMethod,
+                amount: amount
+            };
+
+            tg.sendData(JSON.stringify(payload));
             tg.close();
-        }
+        });
     </script>
 </body>
 </html>
