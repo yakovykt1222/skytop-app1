@@ -5,27 +5,49 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        body { font-family: -apple-system, sans-serif; background: #f4f4f7; padding: 20px; }
-        .pay-card { background: white; border-radius: 15px; padding: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
-        .method { display: flex; align-items: center; padding: 15px; border: 1px solid #eee; border-radius: 10px; margin-bottom: 10px; cursor: pointer; }
-        .method:active { background: #f0f7ff; border-color: #007aff; }
-        .btn-send { background: #007aff; color: white; border: none; width: 100%; padding: 15px; border-radius: 12px; font-weight: bold; margin-top: 10px; }
+        body { font-family: -apple-system, sans-serif; background: #f4f4f7; padding: 20px; display: flex; flex-direction: column; align-items: center; }
+        .card { background: white; border-radius: 20px; width: 100%; max-width: 400px; padding: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        h3 { margin-bottom: 20px; text-align: center; }
+        .method { 
+            display: flex; align-items: center; padding: 15px; border: 2px solid #f0f0f0; 
+            border-radius: 12px; margin-bottom: 12px; cursor: pointer; transition: 0.2s;
+        }
+        .method:active { transform: scale(0.98); }
+        .method.selected { border-color: #007aff; background: #f0f7ff; }
+        .icon { font-size: 24px; margin-right: 15px; }
+        .btn-pay { 
+            background: #007aff; color: white; border: none; width: 100%; 
+            padding: 18px; border-radius: 12px; font-weight: bold; font-size: 16px; margin-top: 10px;
+        }
     </style>
 </head>
 <body>
-    <div class="pay-card">
-        <h3>Выберите способ оплаты:</h3>
-        <div class="method" onclick="selectMethod()">
-            <span style="font-size: 24px; margin-right: 15px;">🚀</span>
-            <div><b>СБП / Карта</b><br><small>Мгновенное пополнение</small></div>
+
+    <div class="card">
+        <h3>Пополнение баланса</h3>
+        <div class="method" onclick="select(this, 'sbp')">
+            <span class="icon">🚀</span>
+            <div><b>СБП</b><br><small>Мгновенно через приложение банка</small></div>
         </div>
-        <button class="btn-send" onclick="sendToBot()">Продолжить</button>
+        <div class="method" onclick="select(this, 'card')">
+            <span class="icon">💳</span>
+            <div><b>Оплата картой</b><br><small>Любые банки РФ</small></div>
+        </div>
+        <button class="btn-pay" onclick="send()">Оплатить 100 ₽</button>
     </div>
 
     <script>
         const tg = window.Telegram.WebApp;
-        function sendToBot() {
-            tg.sendData("pay_100");
+        let selectedMethod = 'sbp';
+
+        function select(el, method) {
+            document.querySelectorAll('.method').forEach(m => m.classList.remove('selected'));
+            el.classList.add('selected');
+            selectedMethod = method;
+        }
+
+        function send() {
+            tg.sendData(selectedMethod);
             tg.close();
         }
     </script>
