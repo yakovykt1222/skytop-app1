@@ -99,7 +99,20 @@
         
         // ВАЖНО: ЗАМЕНИ ЭТО ПРИ ПЕРЕЗАПУСКЕ NGROK
         const NGROK_URL = 'https://undepressible-candie-infinitival.ngrok-free.dev'; 
-
+// --- Функция таймера ---
+        async function updateStatus() {
+            const timerEl = document.getElementById('expire-timer');
+            try {
+                const res = await fetch(`${NGROK_URL}/get-status?user_id=${userId}`);
+                if (!res.ok) throw new Error();
+                const data = await res.json();
+                timerEl.innerText = data.time_left;
+                timerEl.style.color = "#007aff";
+            } catch (e) {
+                timerEl.innerText = "Ошибка связи";
+                timerEl.style.color = "red";
+            }
+        }
         let chosenAmount = 0;
 
         // 1. Функция только ВЫБОРА суммы
@@ -186,4 +199,5 @@
     </script>
 </body>
 </html>
+
 
