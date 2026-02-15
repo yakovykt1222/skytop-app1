@@ -188,17 +188,32 @@
         }
 
         async function updateStatus() {
+            const timerEl = document.getElementById('expire-timer');
             try {
+        // ОШИБКА БЫЛА ТУТ: Убедись, что после NGROK_URL стоит /get-status
                 const res = await fetch(`${NGROK_URL}/get-status?user_id=${userId}`);
-                const data = await res.json();
-                document.getElementById('expire-timer').innerText = data.time_left;
-            } catch (e) { document.getElementById('expire-timer').innerText = "Ошибка"; }
+        
+                if (!res.ok) {
+                    console.error("Сервер ответил с ошибкой:", res.status);
+                    throw new Error();
         }
-        updateStatus();
+        
+                const data = await res.json();
+                timerEl.innerText = data.time_left; // Должно быть "00д 00ч" или время
+                timerEl.style.color = "#007aff";
+    }         catch (e) {
+                timerEl.innerText = "Ошибка связи";
+                timerEl.style.color = "red";
+    }
+}
+
+// И НЕ ЗАБУДЬ ВЫЗВАТЬ ФУНКЦИЮ:
+updateStatus();
         setInterval(updateStatus, 10000);
     </script>
 </body>
 </html>
+
 
 
 
