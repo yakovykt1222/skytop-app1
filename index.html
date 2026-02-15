@@ -7,21 +7,20 @@
     <style>
         body { font-family: -apple-system, sans-serif; background-color: #f4f4f7; color: #000; display: flex; flex-direction: column; align-items: center; padding: 20px 0; margin: 0; }
         .card { background: white; border-radius: 20px; width: 90%; max-width: 380px; padding: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 15px; text-align: center; }
-        .title { font-size: 14px; color: #8e8e93; font-weight: 600; text-transform: uppercase; margin-bottom: 10px; }
+        .title { font-size: 13px; color: #8e8e93; font-weight: 600; text-transform: uppercase; margin-bottom: 10px; letter-spacing: 0.5px; }
         .timer { font-size: 32px; font-weight: 800; color: #007aff; margin-bottom: 20px; }
         
-        .btn-main { background: #007aff; color: white; border: none; border-radius: 14px; padding: 16px; width: 100%; font-size: 16px; font-weight: 600; cursor: pointer; }
-        
-        /* Выбор суммы */
-        #payment-options { display: none; margin-top: 15px; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-        .opt-btn { background: #f2f2f7; border: 1px solid #e5e5ea; border-radius: 10px; padding: 10px 5px; font-size: 14px; font-weight: 600; cursor: pointer; }
-        .opt-btn:active { background: #007aff; color: white; }
+        /* Сетка выбора суммы */
+        .amounts-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
+        .opt-btn { background: #f2f2f7; border: 2px solid transparent; border-radius: 12px; padding: 12px 5px; font-size: 15px; font-weight: 700; cursor: pointer; transition: all 0.2s; }
+        .opt-btn.selected { border-color: #007aff; background: #fff; color: #007aff; transform: scale(1.05); }
 
-        /* Рефералка */
+        /* Кнопка подтверждения */
+        .btn-confirm { background: #007aff; color: white; border: none; border-radius: 14px; padding: 16px; width: 100%; font-size: 16px; font-weight: 600; cursor: pointer; display: none; }
+        
+        /* Рефералка и инструкции */
         .ref-box { display: flex; gap: 10px; margin-top: 15px; }
         .btn-ref { flex: 1; background: #f2f2f7; color: #007aff; border: none; border-radius: 10px; padding: 12px; font-size: 13px; font-weight: 600; cursor: pointer; }
-
-        /* Инструкции */
         .instr-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-top: 10px; }
         .instr-link { background: #fff; border: 1px solid #e5e5ea; border-radius: 12px; padding: 10px; text-decoration: none; color: #000; font-size: 12px; font-weight: 600; }
     </style>
@@ -29,26 +28,27 @@
 <body>
 
     <div class="card">
-        <div class="title">Подписка истекает через:</div>
-        <div class="timer" id="expire-timer">00д 00ч 00м</div>
-        <button class="btn-main" id="topup-btn" onclick="toggleOptions()">💳 Пополнить баланс</button>
+        <div class="title">Подписка активна еще:</div>
+        <div class="timer" id="expire-timer">Загрузка...</div>
         
-        <div id="payment-options">
-            <button class="opt-btn" onclick="pay(80)">80 ₽</button>
-            <button class="opt-btn" onclick="pay(160)">160 ₽</button>
-            <button class="opt-btn" onclick="pay(240)">240 ₽</button>
-            <button class="opt-btn" onclick="pay(320)">320 ₽</button>
-            <button class="opt-btn" onclick="pay(400)">400 ₽</button>
-            <button class="opt-btn" onclick="pay(480)">480 ₽</button>
-            <button class="opt-btn" onclick="pay(560)">560 ₽</button>
-            <button class="opt-btn" onclick="pay(640)">640 ₽</button>
-            <button class="opt-btn" onclick="pay(720)">720 ₽</button>
+        <div class="title">Выберите срок продления:</div>
+        <div class="amounts-grid">
+            <button class="opt-btn" onclick="selectAmount(80, this)">1 мес<br><small>80 ₽</small></button>
+            <button class="opt-btn" onclick="selectAmount(160, this)">2 мес<br><small>160 ₽</small></button>
+            <button class="opt-btn" onclick="selectAmount(240, this)">3 мес<br><small>240 ₽</small></button>
+            <button class="opt-btn" onclick="selectAmount(320, this)">4 мес<br><small>320 ₽</small></button>
+            <button class="opt-btn" onclick="selectAmount(400, this)">5 мес<br><small>400 ₽</small></button>
+            <button class="opt-btn" onclick="selectAmount(480, this)">6 мес<br><small>480 ₽</small></button>
+            <button class="opt-btn" onclick="selectAmount(560, this)">7 мес<br><small>560 ₽</small></button>
+            <button class="opt-btn" onclick="selectAmount(640, this)">8 мес<br><small>640 ₽</small></button>
+            <button class="opt-btn" onclick="selectAmount(720, this)">9 мес<br><small>720 ₽</small></button>
         </div>
+
+        <button class="btn-confirm" id="confirm-btn" onclick="startPayment()">Подтвердить и оплатить</button>
     </div>
 
     <div class="card">
         <div class="title">Пригласи друга — получи +7 дней</div>
-        <div style="font-size: 13px; color: #8e8e93;">Друг получит доступ, а вы — неделю бесплатно!</div>
         <div class="ref-box">
             <button class="btn-ref" onclick="copyRef()">📋 Копировать</button>
             <button class="btn-ref" onclick="shareRef()">🔗 Отправить</button>
@@ -58,9 +58,9 @@
     <div class="card">
         <div class="title">Видеоинструкции</div>
         <div class="instr-grid">
-            <a href="https://t.me/+jMnq2kQHuKs0MDZi" class="instr-link">🍏 iOS</a>
-            <a href="https://t.me/+jMnq2kQHuKs0MDZi" class="instr-link">🤖 Android</a>
-            <a href="https://t.me/+jMnq2kQHuKs0MDZi" class="instr-link">💻 PC</a>
+            <a href="https://t.me/+jMnq2kQHuKs0MDZi" class="instr-link">iOS</a>
+            <a href="https://t.me/+jMnq2kQHuKs0MDZi" class="instr-link">Android</a>
+            <a href="https://t.me/+jMnq2kQHuKs0MDZi" class="instr-link">Windows</a>
         </div>
     </div>
 
@@ -68,45 +68,76 @@
         const tg = window.Telegram.WebApp;
         tg.expand();
         const userId = tg.initDataUnsafe.user.id;
-        const NGROK_URL = 'https://undepressible-candie-infinitival.ngrok-free.dev'; // ОБНОВИ ЭТО
+        
+        // ВАЖНО: ЗАМЕНИ ЭТО ПРИ КАЖДОМ ЗАПУСКЕ NGROK
+        const NGROK_URL = 'https://undepressible-candie-infinitival.ngrok-free.dev'; 
 
-        function toggleOptions() {
-            const div = document.getElementById('payment-options');
-            div.style.display = div.style.display === 'grid' ? 'none' : 'grid';
+        let selectedAmount = 0;
+
+        function selectAmount(amount, el) {
+            selectedAmount = amount;
+            // Снимаем выделение со всех
+            document.querySelectorAll('.opt-btn').forEach(b => b.classList.remove('selected'));
+            // Выделяем текущую
+            el.classList.add('selected');
+            // Показываем кнопку подтверждения
+            const confirmBtn = document.getElementById('confirm-btn');
+            confirmBtn.style.display = 'block';
+            confirmBtn.innerText = `Оплатить ${amount} ₽ (СБП/Карта)`;
         }
 
-        async function pay(amount) {
-            const res = await fetch(`${NGROK_URL}/create-payment`, {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({ amount, user_id: userId })
-            });
-            const data = await res.json();
-            if (data.link) tg.openLink(data.link);
+        async function startPayment() {
+            const btn = document.getElementById('confirm-btn');
+            btn.disabled = true;
+            btn.innerText = "Создаем счет...";
+
+            try {
+                const res = await fetch(`${NGROK_URL}/create-payment`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ amount: selectedAmount, user_id: userId })
+                });
+                const data = await res.json();
+                if (data.link) {
+                    tg.openLink(data.link);
+                } else {
+                    alert("Ошибка: " + data.error);
+                }
+            } catch (e) {
+                alert("Ошибка связи с сервером.");
+            } finally {
+                btn.disabled = false;
+                btn.innerText = `Оплатить ${selectedAmount} ₽ (СБП/Карта)`;
+            }
         }
 
         function copyRef() {
             const link = `https://t.me/skytopvpnbot?start=${userId}`;
-            navigator.clipboard.writeText(link);
-            tg.showScanQrPopup({text: "Ссылка скопирована!"}); // Мини-хак для уведомления
-            setTimeout(() => tg.closeScanQrPopup(), 1000);
+            // Стандартное копирование
+            const el = document.createElement('textarea');
+            el.value = link;
+            document.body.appendChild(el);
+            el.select();
+            document.execCommand('copy');
+            document.body.removeChild(el);
+            
+            tg.showAlert("Ссылка скопирована! Отправьте её другу.");
         }
 
         function shareRef() {
             const link = `https://t.me/skytopvpnbot?start=${userId}`;
-            tg.openTelegramLink(`https://t.me/share/url?url=${encodeURIComponent(link)}&text=Пользуйся крутым VPN!`);
+            tg.openTelegramLink(`https://t.me/share/url?url=${encodeURIComponent(link)}&text=Лови крутой VPN! Подписка всего 80р.`);
         }
 
-        // Обновление таймера (запрос к серверу)
         async function updateTimer() {
             try {
                 const res = await fetch(`${NGROK_URL}/get-status?user_id=${userId}`);
                 const data = await res.json();
                 document.getElementById('expire-timer').innerText = data.time_left;
-            } catch (e) { console.error("Ошибка таймера"); }
+            } catch (e) { document.getElementById('expire-timer').innerText = "Ошибка"; }
         }
-        setInterval(updateTimer, 5000);
         updateTimer();
+        setInterval(updateTimer, 10000); // Обновлять раз в 10 сек
     </script>
 </body>
 </html>
