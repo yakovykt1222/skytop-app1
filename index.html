@@ -12,13 +12,41 @@
         
         /* Сетка выбора суммы */
         .amounts-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
-        .opt-btn { background: #f2f2f7; border: 2px solid transparent; border-radius: 12px; padding: 12px 5px; font-size: 15px; font-weight: 700; cursor: pointer; transition: all 0.2s; }
-        .opt-btn.selected { border-color: #007aff; background: #fff; color: #007aff; transform: scale(1.05); }
+        .opt-btn { 
+            background: #f2f2f7; 
+            border: 2px solid transparent; 
+            border-radius: 12px; 
+            padding: 12px 5px; 
+            font-size: 15px; 
+            font-weight: 700; 
+            cursor: pointer; 
+            transition: all 0.2s ease;
+        }
+        /* Стиль для выбранной кнопки */
+        .opt-btn.active { 
+            border-color: #007aff; 
+            background: #fff; 
+            color: #007aff; 
+            box-shadow: 0 4px 10px rgba(0,122,255,0.1);
+        }
 
-        /* Кнопка подтверждения */
-        .btn-confirm { background: #007aff; color: white; border: none; border-radius: 14px; padding: 16px; width: 100%; font-size: 16px; font-weight: 600; cursor: pointer; display: none; }
+        /* Кнопка подтверждения (скрыта до выбора) */
+        .btn-confirm { 
+            background: #007aff; 
+            color: white; 
+            border: none; 
+            border-radius: 14px; 
+            padding: 18px; 
+            width: 100%; 
+            font-size: 16px; 
+            font-weight: 700; 
+            cursor: pointer; 
+            display: none; /* Скрыта по умолчанию */
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         
-        /* Рефералка и инструкции */
         .ref-box { display: flex; gap: 10px; margin-top: 15px; }
         .btn-ref { flex: 1; background: #f2f2f7; color: #007aff; border: none; border-radius: 10px; padding: 12px; font-size: 13px; font-weight: 600; cursor: pointer; }
         .instr-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-top: 10px; }
@@ -29,29 +57,29 @@
 
     <div class="card">
         <div class="title">Подписка активна еще:</div>
-        <div class="timer" id="expire-timer">Загрузка...</div>
+        <div class="timer" id="expire-timer">...</div>
         
-        <div class="title">Выберите срок продления:</div>
+        <div class="title">Выберите сумму пополнения:</div>
         <div class="amounts-grid">
-            <button class="opt-btn" onclick="selectAmount(80, this)">1 мес<br><small>80 ₽</small></button>
-            <button class="opt-btn" onclick="selectAmount(160, this)">2 мес<br><small>160 ₽</small></button>
-            <button class="opt-btn" onclick="selectAmount(240, this)">3 мес<br><small>240 ₽</small></button>
-            <button class="opt-btn" onclick="selectAmount(320, this)">4 мес<br><small>320 ₽</small></button>
-            <button class="opt-btn" onclick="selectAmount(400, this)">5 мес<br><small>400 ₽</small></button>
-            <button class="opt-btn" onclick="selectAmount(480, this)">6 мес<br><small>480 ₽</small></button>
-            <button class="opt-btn" onclick="selectAmount(560, this)">7 мес<br><small>560 ₽</small></button>
-            <button class="opt-btn" onclick="selectAmount(640, this)">8 мес<br><small>640 ₽</small></button>
-            <button class="opt-btn" onclick="selectAmount(720, this)">9 мес<br><small>720 ₽</small></button>
+            <button class="opt-btn" onclick="selectPrice(80, this)">80 ₽</button>
+            <button class="opt-btn" onclick="selectPrice(160, this)">160 ₽</button>
+            <button class="opt-btn" onclick="selectPrice(240, this)">240 ₽</button>
+            <button class="opt-btn" onclick="selectPrice(320, this)">320 ₽</button>
+            <button class="opt-btn" onclick="selectPrice(400, this)">400 ₽</button>
+            <button class="opt-btn" onclick="selectPrice(480, this)">480 ₽</button>
+            <button class="opt-btn" onclick="selectPrice(560, this)">560 ₽</button>
+            <button class="opt-btn" onclick="selectPrice(640, this)">640 ₽</button>
+            <button class="opt-btn" onclick="selectPrice(720, this)">720 ₽</button>
         </div>
 
-        <button class="btn-confirm" id="confirm-btn" onclick="startPayment()">Подтвердить и оплатить</button>
+        <button class="btn-confirm" id="confirm-pay-btn" onclick="processPayment()">Подтвердить и оплатить</button>
     </div>
 
     <div class="card">
-        <div class="title">Пригласи друга — получи +7 дней</div>
+        <div class="title">Пригласи друга (+7 дней)</div>
         <div class="ref-box">
-            <button class="btn-ref" onclick="copyRef()">📋 Копировать</button>
-            <button class="btn-ref" onclick="shareRef()">🔗 Отправить</button>
+            <button class="btn-ref" onclick="copyReferralLink()">📋 Копировать ссылку</button>
+            <button class="btn-ref" onclick="shareReferralLink()">🔗 Отправить другу</button>
         </div>
     </div>
 
@@ -69,75 +97,92 @@
         tg.expand();
         const userId = tg.initDataUnsafe.user.id;
         
-        // ВАЖНО: ЗАМЕНИ ЭТО ПРИ КАЖДОМ ЗАПУСКЕ NGROK
-        const NGROK_URL = 'https://undepressible-candie-infinitival.ngrok-free.dev'; 
+        // ВАЖНО: ЗАМЕНИ ЭТО ПРИ ПЕРЕЗАПУСКЕ NGROK
+        const NGROK_URL = ' https://undepressible-candie-infinitival.ngrok-free.dev'; 
 
-        let selectedAmount = 0;
+        let chosenAmount = 0;
 
-        function selectAmount(amount, el) {
-            selectedAmount = amount;
-            // Снимаем выделение со всех
-            document.querySelectorAll('.opt-btn').forEach(b => b.classList.remove('selected'));
-            // Выделяем текущую
-            el.classList.add('selected');
+        // 1. Функция только ВЫБОРА суммы
+        function selectPrice(amount, element) {
+            chosenAmount = amount;
+            
+            // Убираем подсветку со всех кнопок
+            document.querySelectorAll('.opt-btn').forEach(btn => btn.classList.remove('active'));
+            
+            // Подсвечиваем нажатую
+            element.classList.add('active');
+            
             // Показываем кнопку подтверждения
-            const confirmBtn = document.getElementById('confirm-btn');
-            confirmBtn.style.display = 'block';
-            confirmBtn.innerText = `Оплатить ${amount} ₽ (СБП/Карта)`;
+            const payBtn = document.getElementById('confirm-pay-btn');
+            payBtn.style.display = 'block';
+            payBtn.innerText = `Подтвердить оплату ${amount} ₽`;
         }
 
-        async function startPayment() {
-            const btn = document.getElementById('confirm-btn');
+        // 2. Функция самой ОПЛАТЫ (вызывается только кнопкой подтверждения)
+        async function processPayment() {
+            const btn = document.getElementById('confirm-pay-btn');
             btn.disabled = true;
-            btn.innerText = "Создаем счет...";
+            btn.innerText = "Подключение к банку...";
 
             try {
-                const res = await fetch(`${NGROK_URL}/create-payment`, {
+                const response = await fetch(`${NGROK_URL}/create-payment`, {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({ amount: selectedAmount, user_id: userId })
+                    body: JSON.stringify({ amount: chosenAmount, user_id: userId })
                 });
-                const data = await res.json();
-                if (data.link) {
-                    tg.openLink(data.link);
+                const result = await response.json();
+                if (result.link) {
+                    tg.openLink(result.link);
                 } else {
-                    alert("Ошибка: " + data.error);
+                    alert("Ошибка: " + result.error);
                 }
-            } catch (e) {
-                alert("Ошибка связи с сервером.");
+            } catch (err) {
+                alert("Ошибка соединения с сервером.");
             } finally {
                 btn.disabled = false;
-                btn.innerText = `Оплатить ${selectedAmount} ₽ (СБП/Карта)`;
+                btn.innerText = `Подтвердить оплату ${chosenAmount} ₽`;
             }
         }
 
-        function copyRef() {
+        // 3. Копирование ссылки (БЕЗ QR-кода)
+        function copyReferralLink() {
             const link = `https://t.me/skytopvpnbot?start=${userId}`;
-            // Стандартное копирование
-            const el = document.createElement('textarea');
-            el.value = link;
-            document.body.appendChild(el);
-            el.select();
-            document.execCommand('copy');
-            document.body.removeChild(el);
             
-            tg.showAlert("Ссылка скопирована! Отправьте её другу.");
+            // Используем современный API буфера обмена
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(link).then(() => {
+                    tg.showAlert("Ссылка скопирована!");
+                });
+            } else {
+                // Запасной метод для старых WebView
+                const textArea = document.createElement("textarea");
+                textArea.value = link;
+                document.body.appendChild(textArea);
+                textArea.select();
+                try {
+                    document.execCommand('copy');
+                    tg.showAlert("Ссылка скопирована!");
+                } catch (err) {
+                    alert("Не удалось скопировать");
+                }
+                document.body.removeChild(textArea);
+            }
         }
 
-        function shareRef() {
+        function shareReferralLink() {
             const link = `https://t.me/skytopvpnbot?start=${userId}`;
             tg.openTelegramLink(`https://t.me/share/url?url=${encodeURIComponent(link)}&text=Лови крутой VPN! Подписка всего 80р.`);
         }
 
-        async function updateTimer() {
+        async function updateStatus() {
             try {
                 const res = await fetch(`${NGROK_URL}/get-status?user_id=${userId}`);
                 const data = await res.json();
                 document.getElementById('expire-timer').innerText = data.time_left;
             } catch (e) { document.getElementById('expire-timer').innerText = "Ошибка"; }
         }
-        updateTimer();
-        setInterval(updateTimer, 10000); // Обновлять раз в 10 сек
+        updateStatus();
+        setInterval(updateStatus, 10000);
     </script>
 </body>
 </html>
