@@ -5,85 +5,114 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        body {
-            font-family: -apple-system, system-ui, sans-serif;
-            background-color: #f4f4f7;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            margin: 0;
+        body { font-family: -apple-system, sans-serif; background-color: #f4f4f7; display: flex; justify-content: center; padding-top: 20px; margin: 0; }
+        .card { background: white; border-radius: 24px; width: 90%; max-width: 400px; padding: 25px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
+        .title { font-size: 18px; font-weight: 700; margin-bottom: 20px; }
+        
+        /* Сетка кнопок */
+        .amounts-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 25px;
         }
-        .card {
+        .amount-btn {
+            border: 1px solid #e5e5ea;
             background: white;
-            border-radius: 24px;
-            width: 85%;
-            max-width: 350px;
-            padding: 30px;
-            text-align: center;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            border-radius: 12px;
+            padding: 12px 5px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
         }
-        .balance-amount { font-size: 42px; font-weight: 800; margin: 10px 0 25px 0; color: #000; }
+        .amount-btn.active {
+            border-color: #007aff;
+            background: #f0f7ff;
+            color: #007aff;
+            box-shadow: 0 0 0 1px #007aff;
+        }
+
         .btn-pay {
             background: #007aff;
             color: white;
             border: none;
-            border-radius: 14px;
-            padding: 16px;
+            border-radius: 16px;
+            padding: 18px;
             width: 100%;
-            font-size: 16px;
+            font-size: 17px;
             font-weight: 600;
             cursor: pointer;
-            box-shadow: 0 4px 15px rgba(0,122,255,0.3);
         }
-        .btn-pay:disabled { background: #c7c7cc; box-shadow: none; }
+        .btn-pay:disabled { background: #aeaeb2; }
+        .footer-text { font-size: 12px; color: #8e8e93; margin-top: 15px; line-height: 1.4; }
     </style>
 </head>
 <body>
 
     <div class="card">
-        <div style="color: #8e8e93; font-size: 13px;">ТЕКУЩИЙ БАЛАНС</div>
-        <div class="balance-amount">0 ₽</div>
-        <button class="btn-pay" id="payBtn" onclick="makePayment()">💳 Пополнить (СБП / Карта)</button>
+        <div class="title">Пополнение баланса</div>
+        
+        <div class="amounts-grid" id="amountsGrid">
+            </div>
+
+        <button class="btn-pay" id="payBtn" onclick="makePayment()">Выбрать способ оплаты</button>
+        
+        <div class="footer-text">
+            Пополнение баланса является однократной операцией. <br>
+            Цены начинаются от 80 ₽.
+        </div>
     </div>
 
     <script>
         const tg = window.Telegram.WebApp;
         tg.expand();
 
+        const prices = [80, 160, 240, 320, 400, 480, 560, 640, 720];
+        let selectedAmount = 80;
+
+        // Генерация кнопок
+        const grid = document.getElementById('amountsGrid');
+        prices.forEach(price => {
+            const btn = document.createElement('button');
+            btn.className = 'amount-btn' + (price === 80 ? ' active' : '');
+            btn.innerText = price + ' ₽';
+            btn.onclick = () => {
+                document.querySelectorAll('.amount-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                selectedAmount = price;
+            };
+            grid.appendChild(btn);
+        });
+
         async function makePayment() {
             const btn = document.getElementById('payBtn');
             btn.disabled = true;
-            btn.innerText = "Связь с банком...";
+            btn.innerText = "Загрузка...";
 
             try {
-                // !!! ЗАМЕНИ ЭТУ ССЫЛКУ НА ССЫЛКУ ИЗ NGROK !!!
-                const NGROK_URL = ' https://undepressible-candie-infinitival.ngrok-free.dev';
+                // ВАЖНО: Вставь свою ссылку Ngrok!
+                const NGROK_URL = 'https://undepressible-candie-infinitival.ngrok-free.dev';
                 
                 const response = await fetch(`${NGROK_URL}/create-payment`, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' }
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ amount: selectedAmount }) // Отправляем сумму
                 });
                 
                 const data = await response.json();
-
                 if (data.link) {
-                    // Открываем платежную страницу ЮKassa
                     tg.openLink(data.link);
-                    btn.innerText = "💳 Пополнить (СБП / Карта)";
                 } else {
-                    alert("Ошибка: " + (data.error || "Не удалось создать платеж"));
+                    alert("Ошибка: " + data.error);
                 }
             } catch (e) {
-                alert("Ошибка соединения! Проверь, что Ngrok запущен.");
+                alert("Нет связи с сервером!");
             } finally {
                 btn.disabled = false;
+                btn.innerText = "Выбрать способ оплаты";
             }
         }
     </script>
 </body>
 </html>
-
-
-
