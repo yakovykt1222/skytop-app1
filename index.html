@@ -78,4 +78,203 @@
         .instr-link { background: #fff; border: 1px solid #e5e5ea; border-radius: 12px; padding: 10px; text-decoration: none; color: #000; font-size: 12px; font-weight: 600; }
 
         /* Модальное окно */
-        .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 1
+        .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.6); backdrop-filter: blur(4px); }
+        .modal-content { 
+            background-color: white; 
+            margin: 10% auto; 
+            padding: 20px; 
+            width: 85%; 
+            max-width: 400px; 
+            max-height: 75vh;
+            border-radius: 24px; 
+            display: flex;
+            flex-direction: column;
+        }
+        .modal-scroll { overflow-y: auto; padding-right: 8px; text-align: left; }
+        .modal-scroll::-webkit-scrollbar { width: 4px; }
+        .modal-scroll::-webkit-scrollbar-thumb { background: #ddd; border-radius: 10px; }
+        .modal-scroll h4 { margin: 15px 0 5px; font-size: 15px; color: #000; }
+        .modal-scroll p { font-size: 13px; line-height: 1.6; color: #444; margin-bottom: 10px; }
+        .close-modal { background: var(--main-blue); color: white; border: none; border-radius: 12px; padding: 15px; width: 100%; font-weight: 700; margin-top: 15px; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <div class="logo">SkyTop VPN</div>
+        <div class="menu-container">
+            <button class="menu-btn" onclick="toggleMenu()">⋮</button>
+            <div id="dropdown-menu" class="dropdown-content">
+                <a href="#" onclick="openSupport()">💬 Поддержка</a>
+                <a href="#" onclick="showRules()">📜 Правила и Оферта</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="card">
+            <div class="title">Ваша подписка:</div>
+            <div id="sub-status" class="status-text">Загрузка...</div>
+            <div id="sub-date" class="expire-date">проверяем данные...</div>
+            
+            <div class="title" style="margin-top: 10px;">Продлить подписку:</div>
+            <div class="amounts-grid">
+                <button class="opt-btn" onclick="selectPrice(80, this)">80 ₽</button>
+                <button class="opt-btn" onclick="selectPrice(160, this)">160 ₽</button>
+                <button class="opt-btn" onclick="selectPrice(240, this)">240 ₽</button>
+                <button class="opt-btn" onclick="selectPrice(320, this)">320 ₽</button>
+                <button class="opt-btn" onclick="selectPrice(400, this)">400 ₽</button>
+                <button class="opt-btn" onclick="selectPrice(480, this)">480 ₽</button>
+                <button class="opt-btn" onclick="selectPrice(560, this)">560 ₽</button>
+                <button class="opt-btn" onclick="selectPrice(640, this)">640 ₽</button>
+                <button class="opt-btn" onclick="selectPrice(720, this)">720 ₽</button>
+            </div>
+            <button class="btn-confirm" id="confirm-pay-btn" onclick="processPayment()">Оплатить</button>
+        </div>
+
+        <div class="card">
+            <div class="title">Реферальная программа</div>
+            <p style="font-size: 12px; color: var(--text-gray);">+7 дней за каждого друга</p>
+            <div class="ref-box">
+                <button class="btn-ref" onclick="copyReferralLink()">📋 Ссылка</button>
+                <button class="btn-ref" onclick="shareReferralLink()">🔗 В чат</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="title">Настройка (Инструкции)</div>
+            <div class="instr-grid">
+                <a href="https://t.me/+jMnq2kQHuKs0MDZi" class="instr-link">iPhone</a>
+                <a href="https://t.me/+jMnq2kQHuKs0MDZi" class="instr-link">Android</a>
+                <a href="https://t.me/+jMnq2kQHuKs0MDZi" class="instr-link">PC</a>
+            </div>
+        </div>
+    </div>
+
+    <div id="rules-modal" class="modal">
+        <div class="modal-content">
+            <h3 style="text-align:center; margin-top:0;">Правила SkyTop VPN</h3>
+            <div class="modal-scroll">
+                <h4>1. Общие положения</h4>
+                <p>1.1. SkyTop VPN предоставляет доступ к защищенной сети. Оплата является акцептом оферты.</p>
+                <p>1.2. Если вы не согласны с условиями, использование сервиса запрещено.</p>
+
+                <h4>2. Порядок оплаты и возврата</h4>
+                <p>2.1. Доступ предоставляется в течение 5 минут после оплаты.</p>
+                <p>2.2. Возврат средств за цифровой товар (активированную подписку) не предусмотрен согласно закону о цифровой дистрибуции.</p>
+                <p>2.3. Проблемы на стороне вашего провайдера не являются поводом для возврата.</p>
+
+                <h4>3. Запрещенные действия</h4>
+                <p>3.1. Запрещено: рассылка спама, DDoS-атаки, распространение вирусов, фишинг и брутфорс.</p>
+                <p>3.2. При нарушении правил аккаунт блокируется без возврата средств.</p>
+
+                <h4>4. Политика конфиденциальности</h4>
+                <p>4.1. Мы не храним логи (историю посещений) наших пользователей.</p>
+                <p>4.2. Собираемые данные: только ваш Telegram ID для работы подписки.</p>
+                
+                <p><strong>Поддержка:</strong> <a href="https://t.me/Yaakkoo">@Yaakkoo</a></p>
+            </div>
+            <button class="close-modal" onclick="closeRules()">Принимаю</button>
+        </div>
+    </div>
+
+    <script>
+        const tg = window.Telegram.WebApp;
+        tg.expand();
+        const userId = tg.initDataUnsafe.user ? tg.initDataUnsafe.user.id : 0;
+        
+        // ТВОЙ URL (не забудь обновлять, если ngrok перезапущен)
+        const NGROK_URL = 'https://undepressible-candie-infinitival.ngrok-free.dev'; 
+
+        function toggleMenu() {
+            const menu = document.getElementById("dropdown-menu");
+            menu.style.display = menu.style.display === "block" ? "none" : "block";
+        }
+
+        function showRules() {
+            document.getElementById("rules-modal").style.display = "block";
+            toggleMenu();
+        }
+
+        function closeRules() {
+            document.getElementById("rules-modal").style.display = "none";
+        }
+
+        function openSupport() {
+            tg.openTelegramLink("https://t.me/Yaakkoo");
+            toggleMenu();
+        }
+
+        // Обновление статуса (Простая версия)
+        async function updateStatus() {
+            const statusEl = document.getElementById('sub-status');
+            const dateEl = document.getElementById('sub-date');
+            
+            try {
+                const res = await fetch(`${NGROK_URL}/get-status?user_id=${userId}`);
+                const data = await res.json();
+                
+                // Сервер должен вернуть {"active": true, "expire_date": "25.12.2024"}
+                if (data.active) {
+                    statusEl.innerText = "Активна";
+                    statusEl.style.color = "#34c759";
+                    dateEl.innerText = "Доступно до: " + data.expire_date;
+                } else {
+                    statusEl.innerText = "Не активна";
+                    statusEl.style.color = "#ff3b30";
+                    dateEl.innerText = "Пополните баланс для доступа";
+                }
+            } catch (e) {
+                statusEl.innerText = "Ошибка сети";
+                dateEl.innerText = "Проверьте подключение";
+            }
+        }
+
+        let chosenAmount = 0;
+        function selectPrice(amount, element) {
+            chosenAmount = amount;
+            document.querySelectorAll('.opt-btn').forEach(btn => btn.classList.remove('active'));
+            element.classList.add('active');
+            const payBtn = document.getElementById('confirm-pay-btn');
+            payBtn.style.display = 'block';
+            payBtn.innerText = `Оплатить ${amount} ₽`;
+        }
+
+        async function processPayment() {
+            const btn = document.getElementById('confirm-pay-btn');
+            btn.disabled = true;
+            btn.innerText = "Создаем счет...";
+            try {
+                const response = await fetch(`${NGROK_URL}/create-payment`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ amount: chosenAmount, user_id: userId })
+                });
+                const result = await response.json();
+                if (result.link) tg.openLink(result.link);
+                else tg.showAlert("Ошибка: " + result.error);
+            } catch (err) {
+                tg.showAlert("Сервер не доступен.");
+            } finally {
+                btn.disabled = false;
+                btn.innerText = `Оплатить ${chosenAmount} ₽`;
+            }
+        }
+
+        function copyReferralLink() {
+            const link = `https://t.me/skytopvpnbot?start=${userId}`;
+            navigator.clipboard.writeText(link).then(() => {
+                tg.showAlert("Ссылка скопирована!");
+            });
+        }
+
+        function shareReferralLink() {
+            const link = `https://t.me/skytopvpnbot?start=${userId}`;
+            tg.openTelegramLink(`https://t.me/share/url?url=${encodeURIComponent(link)}&text=Пользуюсь этим VPN, советую!`);
+        }
+
+        // Запускаем проверку один раз при входе
+        updateStatus();
+    </script>
+</body>
+</html>
