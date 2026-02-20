@@ -22,6 +22,9 @@
             padding: 15px 20px;
             background: var(--card-bg);
             border-bottom: 1px solid #e5e5ea;
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
         .logo { font-weight: 800; font-size: 18px; color: var(--main-blue); }
         
@@ -54,7 +57,7 @@
         /* Карточки */
         .container { display: flex; flex-direction: column; align-items: center; padding-top: 15px; }
         .card { background: var(--card-bg); border-radius: 20px; width: 90%; max-width: 380px; padding: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 15px; text-align: center; box-sizing: border-box; }
-        .title { font-size: 13px; color: var(--text-gray); font-weight: 600; text-transform: uppercase; margin-bottom: 10px; letter-spacing: 0.5px; }
+        .title { font-size: 11px; color: var(--text-gray); font-weight: 600; text-transform: uppercase; margin-bottom: 10px; letter-spacing: 0.5px; }
         .timer { font-size: 32px; font-weight: 800; color: var(--main-blue); margin-bottom: 20px; }
         
         /* Сетка выбора суммы */
@@ -78,17 +81,21 @@
             margin: 10% auto; 
             padding: 20px; 
             width: 85%; 
-            max-width: 350px; 
-            max-height: 75vh;
+            max-width: 400px; 
+            max-height: 80vh;
             border-radius: 20px; 
             text-align: left; 
-            overflow-y: auto;
-            position: relative;
+            display: flex;
+            flex-direction: column;
         }
+        .modal-scroll { overflow-y: auto; padding-right: 5px; }
+        .modal-scroll::-webkit-scrollbar { width: 4px; }
+        .modal-scroll::-webkit-scrollbar-thumb { background: #ccc; border-radius: 10px; }
+        
         .modal-content h3 { margin-top: 0; color: var(--main-blue); text-align: center; }
-        .modal-content h4 { font-size: 15px; margin-bottom: 5px; color: #000; }
-        .modal-content p { font-size: 13px; line-height: 1.4; color: #444; margin-bottom: 10px; }
-        .close-modal { background: var(--main-blue); color: white; border: none; border-radius: 12px; padding: 14px; width: 100%; font-weight: 700; margin-top: 10px; sticky: bottom; }
+        .modal-content h4 { font-size: 14px; margin: 15px 0 5px 0; color: #000; border-bottom: 1px solid #eee; }
+        .modal-content p { font-size: 12px; line-height: 1.5; color: #444; margin-bottom: 10px; }
+        .close-modal { background: var(--main-blue); color: white; border: none; border-radius: 12px; padding: 14px; width: 100%; font-weight: 700; margin-top: 15px; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -107,7 +114,7 @@
     <div class="container">
         <div class="card">
             <div class="title">Подписка активна еще:</div>
-            <div class="timer" id="expire-timer">...</div>
+            <div id="expire-timer" class="timer">...</div>
             
             <div class="title">Выберите сумму пополнения:</div>
             <div class="amounts-grid">
@@ -144,22 +151,37 @@
 
     <div id="rules-modal" class="modal">
         <div class="modal-content">
-            <h3>Юридическая информация</h3>
-            
-            <h4>Публичная оферта SkyTop VPN</h4>
-            <p>1. Сервис SkyTop VPN оказывает услуги подключения к защищенной сети для обеспечения безопасности данных.</p>
-            <p>2. Оплата Товара Покупателем является полным акцептом оферты, что считается равносильным заключению Договора.</p>
-            <p>3. Товар — доступ к VPN-сервису на определенный срок. Все настройки доступа являются конфиденциальными.</p>
-            <p>4. Оплата осуществляется через электронные платежи. Заказ считается доставленным в момент обновления баланса в приложении.</p>
-            <p>5. Возврат средств за активированный доступ не предусмотрен.</p>
-            <p>6. Запрещено использование сервиса для спама, хакерских атак и нарушения законов. Нарушение ведет к блокировке.</p>
+            <h3>Правила и Оферта</h3>
+            <div class="modal-scroll">
+                <h4>1. Общие положения</h4>
+                <p>1.0. Сервис SkyTop VPN оказывает услуги подключения к защищенной сети для обеспечения безопасности данных.</p>
+                <p>1.1. Владелец сервиса SkyTop VPN публикует данную Оферту о продаже доступа к VPN-сервису через бота @skytopvpnbot.</p>
+                <p>1.2. Оплата Товара Покупателем является акцептом оферты, что равносильно заключению Договора.</p>
 
-            <h4>Политика конфиденциальности</h4>
-            <p>Мы уделяем большое значение охране ваших данных. Мы собираем только ваш неперсонализированный Telegram ID для работы системы.</p>
-            <p>Мы НЕ собираем и НЕ храним логи вашей активности, IP-адреса посещаемых сайтов или содержимое вашего трафика.</p>
-            <p>По всем вопросам: <a href="https://t.me/Yaakkoo">@Yaakkoo</a></p>
-            
-            <button class="close-modal" onclick="closeRules()">Принимаю</button>
+                <h4>2. Предмет договора</h4>
+                <p>2.1. Продавец предоставляет доступ к программному обеспечению на определенный срок, а Покупатель производит оплату согласно прейскуранту.</p>
+
+                <h4>3. Оформление Заказа</h4>
+                <p>3.1. Заказ осуществляется через интерфейс Mini App. Для идентификации используется Telegram ID пользователя.</p>
+
+                <h4>4. Доставка товара</h4>
+                <p>4.1. Доступ предоставляется в течение 5 минут после подтверждения оплаты путем обновления баланса или времени подписки в Личном Кабинете.</p>
+
+                <h4>5. Оплата Заказа</h4>
+                <p>5.1. Оплата осуществляется через электронные платежные системы. Подтверждением является списание средств со счета Покупателя.</p>
+
+                <h4>6. Возврат Заказа</h4>
+                <p>6.1. Оформление Заказа означает согласие с качеством услуг. Возврат средств за активированный период доступа не производится.</p>
+
+                <h4>8. Права и обязанности</h4>
+                <p>8.6. Сервис можно использовать только в законных целях. Запрещено: рассылка спама, распространение вредоносного ПО, хакерские атаки, фишинг. При нарушении — блокировка без возврата средств.</p>
+                
+                <h4>Политика конфиденциальности</h4>
+                <p>Мы придерживаемся политики No-Logs. Мы не собираем личных данных, не храним историю ваших посещений и заголовки трафика. Нам известен только ваш Telegram ID для работы подписки.</p>
+                
+                <p><strong>Контакты поддержки:</strong> <a href="https://t.me/Yaakkoo">@Yaakkoo</a></p>
+            </div>
+            <button class="close-modal" onclick="closeRules()">Я согласен с условиями</button>
         </div>
     </div>
 
@@ -168,8 +190,10 @@
         tg.expand();
         const userId = tg.initDataUnsafe.user ? tg.initDataUnsafe.user.id : 0;
         
+        // ВАЖНО: Ссылка на твой сервер
         const NGROK_URL = 'https://undepressible-candie-infinitival.ngrok-free.dev'; 
 
+        // Логика меню
         function toggleMenu() {
             const menu = document.getElementById("dropdown-menu");
             menu.style.display = menu.style.display === "block" ? "none" : "block";
@@ -195,6 +219,7 @@
             }
         }
 
+        // Таймер статуса
         async function updateStatus() {
             const timerEl = document.getElementById('expire-timer');
             try {
@@ -209,6 +234,7 @@
             }
         }
 
+        // Выбор цены
         let chosenAmount = 0;
         function selectPrice(amount, element) {
             chosenAmount = amount;
@@ -216,13 +242,14 @@
             element.classList.add('active');
             const payBtn = document.getElementById('confirm-pay-btn');
             payBtn.style.display = 'block';
-            payBtn.innerText = `Подтвердить оплату ${amount} ₽`;
+            payBtn.innerText = `Подтвердить и оплатить ${amount} ₽`;
         }
 
+        // Оплата
         async function processPayment() {
             const btn = document.getElementById('confirm-pay-btn');
             btn.disabled = true;
-            btn.innerText = "Подключение...";
+            btn.innerText = "Подключение к банку...";
             try {
                 const response = await fetch(`${NGROK_URL}/create-payment`, {
                     method: 'POST',
@@ -236,13 +263,14 @@
                     tg.showAlert("Ошибка: " + result.error);
                 }
             } catch (err) {
-                tg.showAlert("Ошибка соединения.");
+                tg.showAlert("Сервер не отвечает.");
             } finally {
                 btn.disabled = false;
-                btn.innerText = `Подтвердить оплату ${chosenAmount} ₽`;
+                btn.innerText = `Подтвердить и оплатить ${chosenAmount} ₽`;
             }
         }
 
+        // Рефералка
         function copyReferralLink() {
             const link = `https://t.me/skytopvpnbot?start=${userId}`;
             const el = document.createElement('textarea');
