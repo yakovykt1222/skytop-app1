@@ -15,7 +15,14 @@
             --error-red: #ff3b30;
         }
 
-        body { font-family: -apple-system, sans-serif; background-color: var(--bg-color); color: #000; margin: 0; padding-bottom: 30px; -webkit-tap-highlight-color: transparent; }
+        body { 
+            font-family: -apple-system, sans-serif; 
+            background-color: var(--bg-color); 
+            color: #000; 
+            margin: 0; 
+            padding-bottom: 30px; 
+            -webkit-tap-highlight-color: transparent; 
+        }
         
         /* Шапка */
         .header {
@@ -58,27 +65,66 @@
 
         /* Контент */
         .container { display: flex; flex-direction: column; align-items: center; padding-top: 15px; }
-        .card { background: var(--card-bg); border-radius: 20px; width: 92%; max-width: 400px; padding: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 15px; text-align: center; box-sizing: border-box; }
+        .card { 
+            background: var(--card-bg); 
+            border-radius: 20px; 
+            width: 92%; 
+            max-width: 400px; 
+            padding: 20px; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05); 
+            margin-bottom: 15px; 
+            text-align: center; 
+            box-sizing: border-box; 
+        }
         .title { font-size: 11px; color: var(--text-gray); font-weight: 600; text-transform: uppercase; margin-bottom: 10px; letter-spacing: 0.5px; }
         
-        /* Стили статуса */
+        /* Статус */
         .status-text { font-size: 22px; font-weight: 800; color: var(--main-blue); margin-bottom: 5px; }
         .expire-date { font-size: 14px; color: var(--text-gray); margin-bottom: 20px; }
 
-        /* Кнопки выбора суммы */
+        /* Сетка цен */
         .amounts-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
-        .opt-btn { background: #f2f2f7; border: 2px solid transparent; border-radius: 12px; padding: 12px 5px; font-size: 15px; font-weight: 700; cursor: pointer; transition: all 0.2s; }
+        .opt-btn { 
+            background: #f2f2f7; 
+            border: 2px solid transparent; 
+            border-radius: 12px; 
+            padding: 12px 5px; 
+            font-size: 15px; 
+            font-weight: 700; 
+            cursor: pointer; 
+            transition: all 0.2s; 
+        }
         .opt-btn.active { border-color: var(--main-blue); background: #fff; color: var(--main-blue); }
 
-        .btn-confirm { background: var(--main-blue); color: white; border: none; border-radius: 14px; padding: 18px; width: 100%; font-size: 16px; font-weight: 700; cursor: pointer; display: none; }
+        .btn-confirm { 
+            background: var(--main-blue); 
+            color: white; 
+            border: none; 
+            border-radius: 14px; 
+            padding: 18px; 
+            width: 100%; 
+            font-size: 16px; 
+            font-weight: 700; 
+            cursor: pointer; 
+            display: none; 
+        }
         
         .ref-box { display: flex; gap: 10px; margin-top: 10px; }
         .btn-ref { flex: 1; background: #f2f2f7; color: var(--main-blue); border: none; border-radius: 10px; padding: 12px; font-size: 13px; font-weight: 600; cursor: pointer; }
         
         .instr-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-top: 10px; }
-        .instr-link { background: #fff; border: 1px solid #e5e5ea; border-radius: 12px; padding: 10px; text-decoration: none; color: #000; font-size: 12px; font-weight: 600; }
+        .instr-link { 
+            background: #fff; 
+            border: 1px solid #e5e5ea; 
+            border-radius: 12px; 
+            padding: 10px; 
+            text-decoration: none; 
+            color: #000; 
+            font-size: 12px; 
+            font-weight: 600; 
+        }
 
-        /* Модальное окно */
+        /* Модалка */
         .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.6); backdrop-filter: blur(4px); }
         .modal-content { 
             background-color: white; 
@@ -92,10 +138,6 @@
             flex-direction: column;
         }
         .modal-scroll { overflow-y: auto; padding-right: 8px; text-align: left; }
-        .modal-scroll::-webkit-scrollbar { width: 4px; }
-        .modal-scroll::-webkit-scrollbar-thumb { background: #ddd; border-radius: 10px; }
-        .modal-scroll h4 { margin: 15px 0 5px; font-size: 15px; color: #000; }
-        .modal-scroll p { font-size: 13px; line-height: 1.6; color: #444; margin-bottom: 10px; }
         .close-modal { background: var(--main-blue); color: white; border: none; border-radius: 12px; padding: 15px; width: 100%; font-weight: 700; margin-top: 15px; cursor: pointer; }
     </style>
 </head>
@@ -143,7 +185,7 @@
         </div>
 
         <div class="card">
-            <div class="title">Настройка (Инструкции)</div>
+            <div class="title">Настройка</div>
             <div class="instr-grid">
                 <a href="https://t.me/+jMnq2kQHuKs0MDZi" class="instr-link">iPhone</a>
                 <a href="https://t.me/+jMnq2kQHuKs0MDZi" class="instr-link">Android</a>
@@ -158,21 +200,9 @@
             <div class="modal-scroll">
                 <h4>1. Общие положения</h4>
                 <p>1.1. SkyTop VPN предоставляет доступ к защищенной сети. Оплата является акцептом оферты.</p>
-                <p>1.2. Если вы не согласны с условиями, использование сервиса запрещено.</p>
-
-                <h4>2. Порядок оплаты и возврата</h4>
+                <h4>2. Порядок оплаты</h4>
                 <p>2.1. Доступ предоставляется в течение 5 минут после оплаты.</p>
-                <p>2.2. Возврат средств за цифровой товар (активированную подписку) не предусмотрен согласно закону о цифровой дистрибуции.</p>
-                <p>2.3. Проблемы на стороне вашего провайдера не являются поводом для возврата.</p>
-
-                <h4>3. Запрещенные действия</h4>
-                <p>3.1. Запрещено: рассылка спама, DDoS-атаки, распространение вирусов, фишинг и брутфорс.</p>
-                <p>3.2. При нарушении правил аккаунт блокируется без возврата средств.</p>
-
-                <h4>4. Политика конфиденциальности</h4>
-                <p>4.1. Мы не храним логи (историю посещений) наших пользователей.</p>
-                <p>4.2. Собираемые данные: только ваш Telegram ID для работы подписки.</p>
-                
+                <p>2.2. Возврат средств за цифровой товар не предусмотрен.</p>
                 <p><strong>Поддержка:</strong> <a href="https://t.me/Yaakkoo">@Yaakkoo</a></p>
             </div>
             <button class="close-modal" onclick="closeRules()">Принимаю</button>
@@ -182,10 +212,12 @@
     <script>
         const tg = window.Telegram.WebApp;
         tg.expand();
+        
+        // Получаем ID пользователя
         const userId = tg.initDataUnsafe.user ? tg.initDataUnsafe.user.id : 0;
         
-        // ТВОЙ URL (не забудь обновлять, если ngrok перезапущен)
-        const NGROK_URL = 'http://162.248.164.65:443/create-payment'; 
+        // ТВОЙ IP СЕРВЕРА (Оставляем 443 порт)
+        const BASE_URL = 'http://162.248.164.65:443'; 
 
         function toggleMenu() {
             const menu = document.getElementById("dropdown-menu");
@@ -206,28 +238,29 @@
             toggleMenu();
         }
 
-        // Обновление статуса (Простая версия)
+        // Обновление статуса из базы данных бота
         async function updateStatus() {
             const statusEl = document.getElementById('sub-status');
             const dateEl = document.getElementById('sub-date');
             
             try {
-                const res = await fetch(`${NGROK_URL}/get-status?user_id=${userId}`);
+                // Запрашиваем данные у нашего Python сервера
+                const res = await fetch(`${BASE_URL}/get-status?user_id=${userId}`);
                 const data = await res.json();
                 
-                // Сервер должен вернуть {"active": true, "expire_date": "25.12.2024"}
-                if (data.active) {
+                if (data.time_left && data.time_left !== "0д 0ч" && data.time_left !== "Истекла") {
                     statusEl.innerText = "Активна";
                     statusEl.style.color = "#34c759";
-                    dateEl.innerText = "Доступно до: " + data.expire_date;
+                    dateEl.innerText = "Осталось: " + data.time_left;
                 } else {
                     statusEl.innerText = "Не активна";
                     statusEl.style.color = "#ff3b30";
                     dateEl.innerText = "Пополните баланс для доступа";
                 }
             } catch (e) {
-                statusEl.innerText = "Ошибка сети";
-                dateEl.innerText = "Проверьте подключение";
+                statusEl.innerText = "Ошибка сервера";
+                dateEl.innerText = "Сервер не отвечает";
+                console.error("Status error:", e);
             }
         }
 
@@ -241,21 +274,30 @@
             payBtn.innerText = `Оплатить ${amount} ₽`;
         }
 
+        // Кнопка оплаты
         async function processPayment() {
+            if (!chosenAmount) return;
             const btn = document.getElementById('confirm-pay-btn');
             btn.disabled = true;
             btn.innerText = "Создаем счет...";
+
             try {
-                const response = await fetch(`${NGROK_URL}/create-payment`, {
+                const response = await fetch(`${BASE_URL}/create-payment`, {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({ amount: chosenAmount, user_id: userId })
                 });
+                
                 const result = await response.json();
-                if (result.link) tg.openLink(result.link);
-                else tg.showAlert("Ошибка: " + result.error);
+                
+                if (result.link) {
+                    tg.openLink(result.link);
+                } else {
+                    tg.showAlert("Ошибка: " + (result.error || "Неизвестная ошибка"));
+                }
             } catch (err) {
-                tg.showAlert("Сервер не доступен.");
+                tg.showAlert("Сервер временно недоступен. Проверьте запуск бота!");
+                console.error("Payment error:", err);
             } finally {
                 btn.disabled = false;
                 btn.innerText = `Оплатить ${chosenAmount} ₽`;
@@ -264,9 +306,14 @@
 
         function copyReferralLink() {
             const link = `https://t.me/skytopvpnbot?start=${userId}`;
-            navigator.clipboard.writeText(link).then(() => {
-                tg.showAlert("Ссылка скопирована!");
-            });
+            // Попытка копирования
+            const el = document.createElement('textarea');
+            el.value = link;
+            document.body.appendChild(el);
+            el.select();
+            document.execCommand('copy');
+            document.body.removeChild(el);
+            tg.showAlert("Ссылка скопирована!");
         }
 
         function shareReferralLink() {
@@ -274,16 +321,8 @@
             tg.openTelegramLink(`https://t.me/share/url?url=${encodeURIComponent(link)}&text=Пользуюсь этим VPN, советую!`);
         }
 
-        // Запускаем проверку один раз при входе
+        // Запуск проверки при открытии
         updateStatus();
     </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
