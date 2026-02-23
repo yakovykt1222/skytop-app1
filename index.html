@@ -278,34 +278,33 @@ function processPayment() {
 
 // ===== СМЕНА КЛЮЧА =====
 async function rotateKey() {
-    if (!userId) return;
+    if (!userId) {
+        console.log("Нет userId");
+        return;
+    }
 
     const btn = document.getElementById("rotate-btn");
     btn.innerText = "⏳ Обновление...";
     btn.disabled = true;
 
     try {
-        const res = await fetch(`${BASE_URL}/rotate-key`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ user_id: userId })
+        const res = await fetch(`${BASE_URL}/rotate-key?user_id=${userId}`, {
+            method: "POST"
         });
 
         const data = await res.json();
 
         if (data.status === "success") {
             vpnKey = data.link;
-            keyVisible = true;
-
             document.getElementById("key-box").innerText = vpnKey;
             document.getElementById("key-box").style.display = "block";
-
             tg.showAlert("Ключ успешно обновлён ✅");
         } else {
-            tg.showAlert(data.message || "Ошибка");
+            tg.showAlert(data.message || "Ошибка сервера");
         }
 
     } catch (e) {
+        console.error(e);
         tg.showAlert("Ошибка соединения");
     }
 
@@ -317,3 +316,4 @@ async function rotateKey() {
 updateStatus();
 loadKey();
 </script>
+
