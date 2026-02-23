@@ -175,26 +175,29 @@ let keyVisible = false;
 // ====== СТАТУС ======
 
 async function updateStatus() {
-    const res = await fetch(`${BASE_URL}/get-status?user_id=${userId}`);
-    const data = await res.json();
+    try {
+        const res = await fetch(`${BASE_URL}/get-status?user_id=${userId}`);
+        const data = await res.json();
 
-    const statusEl = document.getElementById("sub-status");
-    const dateEl = document.getElementById("sub-date");
-    const payBtn = document.getElementById("pay-btn");
+        const statusEl = document.getElementById("sub-status");
+        const dateEl = document.getElementById("sub-date");
 
-    if (data.time_left && data.time_left !== "Истекла") {
-        statusEl.innerText = "Активна";
-        statusEl.style.color = "#34c759";
-        dateEl.innerText = "Осталось: " + data.time_left;
-        payBtn.style.display = "none";
-    } else {
-        statusEl.innerText = "Не активна";
-        statusEl.style.color = "#ff3b30";
-        dateEl.innerText = "Пополните баланс";
-        payBtn.style.display = "block";
+        if (!statusEl || !dateEl) return;
+
+        if (data.time_left && data.time_left !== "Истекла") {
+            statusEl.innerText = "Активна";
+            statusEl.style.color = "#34c759";
+            dateEl.innerText = "Осталось: " + data.time_left;
+        } else {
+            statusEl.innerText = "Не активна";
+            statusEl.style.color = "#ff3b30";
+            dateEl.innerText = "Пополните баланс";
+        }
+
+    } catch (e) {
+        console.log(e);
     }
 }
-
 // ====== КЛЮЧ ======
 
 async function loadKey() {
@@ -368,6 +371,7 @@ loadKey();
 </script>
 </body>
 </html>
+
 
 
 
