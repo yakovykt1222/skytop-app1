@@ -282,28 +282,87 @@ async function rotateKey() {
     btn.disabled = false;
 }
         <script>
-        const tg = window.Telegram.WebApp;
-        tg.expand();
+        <script>
+const tg = window.Telegram.WebApp;
+tg.expand();
 
-        const userId = ...
-        const BASE_URL = ...
+const userId = tg.initDataUnsafe.user ? tg.initDataUnsafe.user.id : 0;
+const BASE_URL = "https://api.skytop.space";
 
-        // ===== ТУТ ВСТАВЛЯЕШЬ =====
+let vpnKey = "";
+let keyVisible = false;
 
-        let selectedPrice = 0;
+// ================= ОПЛАТА =================
 
-        function selectPrice(price, btn) {
-            ...
+let selectedPrice = 0;
+
+function selectPrice(price, btn) {
+    selectedPrice = price;
+
+    document.querySelectorAll(".opt-btn").forEach(b => {
+        b.classList.remove("active");
+    });
+
+    btn.classList.add("active");
+
+    document.getElementById("confirm-pay-btn").style.display = "block";
+}
+
+function processPayment() {
+    if (!selectedPrice) {
+        tg.showAlert("Выберите сумму");
+        return;
+    }
+
+    tg.sendData(JSON.stringify({
+        action: "pay",
+        amount: selectedPrice
+    }));
+}
+
+// ================= СМЕНА КЛЮЧА =================
+
+async function rotateKey() {
+    if (!userId) return;
+
+    const btn = document.getElementById("rotate-key-btn");
+    btn.innerText = "⏳ Обновление...";
+    btn.disabled = true;
+
+    try {
+        const res = await fetch(`${BASE_URL}/rotate-key`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ user_id: userId })
+        });
+
+        const data = await res.json();
+
+        if (data.status === "success") {
+            vpnKey = data.link;
+            keyVisible = true;
+
+            document.getElementById("key-box").innerText = vpnKey;
+            document.getElementById("key-box").style.display = "block";
+
+            tg.showAlert("Ключ успешно обновлён ✅");
+        } else {
+            tg.showAlert(data.message || "Ошибка");
         }
 
-        function processPayment() {
-            ...
-        }
+    } catch (e) {
+        tg.showAlert("Ошибка соединения");
+    }
+
+    btn.innerText = "🔄 Сменить ключ";
+    btn.disabled = false;
+}
 
         // ===== ТУТ УЖЕ БЫЛО =====
-
+             
 updateStatus();
 loadKey();
+    
 </script>
 // запуск
 updateStatus();
@@ -312,4 +371,5 @@ loadKey();
 
 </body>
 </html>
+
 
