@@ -167,6 +167,8 @@ const tg = window.Telegram.WebApp;
 tg.expand();
 
 const userId = tg.initDataUnsafe.user ? tg.initDataUnsafe.user.id : 0;
+console.log("USER ID:", userId); // 👈 ДОБАВЬ ЭТУ СТРОКУ
+    
 const BASE_URL = "https://api.skytop.space";
 
 let vpnKey = "";
@@ -371,6 +373,7 @@ loadKey();
 </script>
 </body>
 </html>
+
 
 
 
