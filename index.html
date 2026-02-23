@@ -128,6 +128,13 @@
 
     <!-- КЛЮЧ -->
     <div class="card">
+        <div class="title">Выберите сумму пополнения:</div>
+        <div class="amounts-grid">
+        ...
+        </div>
+        <button class="btn-confirm" id="confirm-pay-btn" onclick="processPayment()">Подтвердить и оплатить</button>
+    </div>
+        
         <div class="title">Ваш VPN ключ</div>
 
         <div id="key-status" style="font-size:13px;color:#8e8e93;margin-bottom:10px;">
@@ -238,25 +245,66 @@ function openInApp() {
 // ====== СМЕНА КЛЮЧА ======
 
 async function rotateKey() {
-    const res = await fetch(`${BASE_URL}/rotate-key`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ user_id: userId })
-    });
+    if (!userId) return;
 
-    const data = await res.json();
+    const btn = document.getElementById("rotate-key-btn");
+    btn.innerText = "⏳ Обновление...";
+    btn.disabled = true;
 
-    if (data.success) {
-        vpnKey = data.link;
-        alert("Ключ обновлён!");
-        loadKey();
-    } else {
-        alert(data.error || "Ошибка");
+    try {
+        const res = await fetch(`${BASE_URL}/rotate-key`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ user_id: userId })
+        });
+
+        const data = await res.json();
+
+        if (data.status === "success") {
+            vpnKey = data.link;
+            keyVisible = true;
+
+            document.getElementById("key-box").innerText = vpnKey;
+            document.getElementById("key-box").style.display = "block";
+
+            tg.showAlert("Ключ успешно обновлён ✅");
+        } else {
+            tg.showAlert(data.message || "Ошибка");
+        }
+
+    } catch (e) {
+        tg.showAlert("Ошибка соединения");
     }
-}
 
+    btn.innerText = "🔄 Сменить ключ";
+    btn.disabled = false;
+}
+        <script>
+        const tg = window.Telegram.WebApp;
+        tg.expand();
+
+        const userId = ...
+        const BASE_URL = ...
+
+        // ===== ТУТ ВСТАВЛЯЕШЬ =====
+
+        let selectedPrice = 0;
+
+        function selectPrice(price, btn) {
+            ...
+        }
+
+        function processPayment() {
+            ...
+        }
+
+        // ===== ТУТ УЖЕ БЫЛО =====
+
+updateStatus();
+loadKey();
+</script>
 // запуск
 updateStatus();
 loadKey();
@@ -264,3 +312,4 @@ loadKey();
 
 </body>
 </html>
+
