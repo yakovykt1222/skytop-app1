@@ -288,32 +288,30 @@ async function rotateKey() {
     btn.disabled = true;
 
     try {
+        console.log("USER ID:", userId);
+        console.log("URL:", `${BASE_URL}/rotate-key?user_id=${userId}`);
+
         const res = await fetch(`${BASE_URL}/rotate-key?user_id=${userId}`, {
             method: "POST"
         });
 
-        const data = await res.json();
+        console.log("STATUS:", res.status);
 
-        if (data.status === "success") {
-            vpnKey = data.link;
-            document.getElementById("key-box").innerText = vpnKey;
-            document.getElementById("key-box").style.display = "block";
-            tg.showAlert("Ключ успешно обновлён ✅");
-        } else {
-            tg.showAlert(data.message || "Ошибка сервера");
-        }
+        const text = await res.text();
+        console.log("RAW RESPONSE:", text);
+
+        btn.innerText = "🔄 Сменить ключ";
+        btn.disabled = false;
 
     } catch (e) {
-        console.error(e);
-        tg.showAlert("Ошибка соединения");
+        console.error("FETCH ERROR:", e);
+        btn.innerText = "🔄 Сменить ключ";
+        btn.disabled = false;
     }
-
-    btn.innerText = "🔄 Сменить ключ";
-    btn.disabled = false;
 }
-
 // ===== ЗАПУСК =====
 updateStatus();
 loadKey();
 </script>
+
 
