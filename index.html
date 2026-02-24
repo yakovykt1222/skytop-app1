@@ -204,7 +204,7 @@ async function updateStatus() {
 // ===== КЛЮЧ =====
 async function loadKey() {
     try {
-        const res = await fetch(`${BASE_URL}/get-key?user_id=${userId}`);
+        const res = await fetch(`${BASE_URL}/get-status?user_id=${userId}`);
         const data = await res.json();
 
         const statusEl = document.getElementById("key-status");
@@ -212,8 +212,8 @@ async function loadKey() {
         const openBtn = document.getElementById("open-app-btn");
         const rotateBtn = document.getElementById("rotate-btn");
 
-        if (data.active) {
-            vpnKey = data.key;
+        if (data.vpn_key_status === "Активен") {
+            vpnKey = data.vpn_key; // убедись, что в Python это поле называется так
             statusEl.innerText = "Подписка активна";
             statusEl.style.color = "#34c759";
             toggleBtn.style.display = "block";
@@ -313,5 +313,6 @@ async function rotateKey() {
 updateStatus();
 loadKey();
 </script>
+
 
 
