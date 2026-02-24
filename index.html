@@ -300,6 +300,11 @@ async function rotateKey() {
         const text = await res.text();
         console.log("RAW RESPONSE:", text);
 
+        // ДОБАВЬ ЭТО:
+        tg.showAlert("Ключ успешно обновлен!");
+        await updateStatus(); // Обновляем текст статуса
+        await loadKey();      // Загружаем новый ключ в vpnKey
+
         btn.innerText = "🔄 Сменить ключ";
         btn.disabled = false;
 
@@ -313,6 +318,7 @@ async function rotateKey() {
 updateStatus();
 loadKey();
 </script>
+
 
 
 
