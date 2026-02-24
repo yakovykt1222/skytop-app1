@@ -278,46 +278,59 @@ function processPayment() {
 
 // ===== СМЕНА КЛЮЧА =====
 async function rotateKey() {
-    if (!userId) {
-        console.log("Нет userId");
-        return;
-    }
+    if (!userId) return;
 
     const btn = document.getElementById("rotate-btn");
     btn.innerText = "⏳ Обновление...";
     btn.disabled = true;
 
     try {
-        console.log("USER ID:", userId);
-        console.log("URL:", `${BASE_URL}/rotate-key?user_id=${userId}`);
-
         const res = await fetch(`${BASE_URL}/rotate-key?user_id=${userId}`, {
             method: "POST"
         });
 
-        console.log("STATUS:", res.status);
+        if (res.ok) {
+            const data = await res.json(); // Сразу парсим JSON
+            
+            if (data.success || data.new_key) {
+                vpnKey = data.new_key; // Записываем новый ключ в переменную
+                
+                // Если плашка с ключом открыта — обновляем в ней текст
+                const box = document.getElementById("key-box");
+                if (keyVisible) {
+                    box.innerText = vpnKey;
+                }
 
-        const text = await res.text();
-        console.log("RAW RESPONSE:", text);
-
-        // ДОБАВЬ ЭТО:
-        tg.showAlert("Ключ успешно обновлен!");
-        await updateStatus(); // Обновляем текст статуса
-        await loadKey();      // Загружаем новый ключ в vpnKey
-
-        btn.innerText = "🔄 Сменить ключ";
-        btn.disabled = false;
+                tg.showAlert("✅ Ключ успешно обновлен!");
+                
+                // Обновляем статус (дату), чтобы всё было синхронно
+                await updateStatus(); 
+            }
+        } else {
+            tg.showAlert("❌ Ошибка сервера при обновлении");
+        }
 
     } catch (e) {
         console.error("FETCH ERROR:", e);
+        tg.showAlert("❌ Ошибка сети");
+    } finally {
         btn.innerText = "🔄 Сменить ключ";
         btn.disabled = false;
     }
 }
+
+
+
+
+
+
+
+    
 // ===== ЗАПУСК =====
 updateStatus();
 loadKey();
 </script>
+
 
 
 
