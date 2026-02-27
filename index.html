@@ -176,7 +176,7 @@
                 👁 Показать
             </button>
             
-            <button class="btn-ref" onclick="copyKey()" id="copy-key-btn" style="display:none;">
+            <button class="btn-ref" onclick="copyKey()" id="copy-btn" style="display:none;">
                 📋 Копировать
             </button>
             
@@ -454,13 +454,26 @@ async function rotateKey() {
         }
 
 
-
+function updateUI(data) {
+    if (data.vpn_key) {
+        // Находим наши кнопки
+        document.getElementById('toggle-key-btn').style.display = 'block';
+        document.getElementById('open-app-btn').style.display = 'block';
+        
+        // ДОБАВЬ ЭТУ СТРОЧКУ:
+        document.getElementById('copy-btn').style.display = 'block'; 
+        
+        // Обновляем сам текст ключа
+        document.getElementById('vpn-key-text').innerText = data.vpn_key;
+    }
+}
 
     
 // ===== ЗАПУСК =====
 updateStatus();
 loadKey();
 </script>
+
 
 
 
