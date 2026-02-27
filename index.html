@@ -453,11 +453,65 @@ function copyKey() {
         console.error('Ошибка при копировании:', err);
     });
 }
+function copyKeyForce() {
+    // 1. Пытаемся взять ключ из текста на экране
+    // (ищем любой элемент, который начинается на vless или ss)
+    let keyToCopy = "";
     
+    // Поиск по ID vpn-key
+    const keyEl = document.getElementById('vpn-key');
+    if (keyEl && keyEl.innerText.includes('://')) {
+        keyToCopy = keyEl.innerText;
+    } 
+    // Если там точки, возможно ключ лежит в глобальной переменной
+    else if (typeof currentVpnKey !== 'undefined') {
+        keyToCopy = currentVpnKey;
+    }
+
+    if (!keyToCopy || keyToCopy.includes('•••')) {
+        alert("Ошибка: ключ не загружен или скрыт. Нажмите 'Показать'.");
+        return;
+    }
+
+    // 2. Копирование
+    if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(keyToCopy).then(() => {
+            handleSuccessCopy();
+        });
+    } else {
+        // Старый метод для некоторых браузеров
+        const textArea = document.createElement("textarea");
+        textArea.value = keyToCopy;
+        document.body.appendChild(textArea);
+        textArea.select();
+        try {
+            document.execCommand('copy');
+            handleSuccessCopy();
+        } catch (err) {
+            alert('Не удалось скопировать');
+        }
+        document.body.removeChild(textArea);
+    }
+}
+
+function handleSuccessCopy() {
+    const btn = document.getElementById('copy-btn');
+    const originalText = btn.innerText;
+    btn.innerText = "✅ Скопировано!";
+    
+    if (window.Telegram && window.Telegram.WebApp) {
+        window.Telegram.WebApp.HapticFeedback.notificationOccurred('success');
+    }
+    
+    setTimeout(() => {
+        btn.innerText = originalText;
+    }, 2000);
+}    
 // ===== ЗАПУСК =====
 updateStatus();
 loadKey();
 </script>
+
 
 
 
