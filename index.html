@@ -106,6 +106,34 @@
             cursor:pointer;
             margin-top:10px;
         }
+        .key-card {
+            cursor: pointer;
+            transition: transform 0.1s;
+            position: relative;
+        }
+
+        .key-card:active {
+            transform: scale(0.98); /* Эффект нажатия */
+        }
+
+        .key-display {
+            background: #f4f4f4;
+            padding: 12px;
+            border-radius: 10px;
+            font-family: monospace;
+            font-size: 13px;
+            word-break: break-all; /* Чтобы длинный ключ не вылезал за края */
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .copy-icon {
+            margin-left: 10px;
+            font-size: 16px;
+        } 
+
+        
  /* Сетка выбора суммы */
         .amounts-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
         .opt-btn { background: #f2f2f7; border: 2px solid transparent; border-radius: 12px; padding: 12px 5px; font-size: 15px; font-weight: 700; cursor: pointer; transition: all 0.2s ease; }
@@ -184,8 +212,17 @@
                 <button class="btn-ref" onclick="shareReferralLink()">🔗 Отправить</button>
             </div>
         </div>
-
-</div>
+        <div class="card key-card" onclick="copyKey()">
+            <div class="title">Ваш ключ доступа</div>
+            <div class="key-display">
+                <span id="vpn-key">vless://...ваш_ключ...</span>
+                <span class="copy-icon">📋</span>
+           </div>
+           <div id="copy-status" style="display:none; font-size: 10px; color: #4caf50; margin-top: 5px;">
+               Скопировано!
+           </div>
+        </div>
+ 
 
 <script>
 const tg = window.Telegram.WebApp;
@@ -271,7 +308,29 @@ function toggleKey() {
         btn.innerText = "👁 Показать";
     }
 }
+function copyKey() {
+    // Находим текст ключа
+    const keyText = document.getElementById('vpn-key').innerText;
 
+    // Копируем в буфер обмена
+    navigator.clipboard.writeText(keyText).then(() => {
+        // Показываем уведомление "Скопировано"
+        const status = document.getElementById('copy-status');
+        status.style.display = 'block';
+        
+        // Вибрация (работает в Telegram)
+        if (window.Telegram && window.Telegram.WebApp) {
+            window.Telegram.WebApp.HapticFeedback.notificationOccurred('success');
+        }
+
+        // Скрываем надпись через 2 секунды
+        setTimeout(() => {
+            status.style.display = 'none';
+        }, 2000);
+    }).catch(err => {
+        console.error('Ошибка при копировании: ', err);
+    });
+}
 function openInApp() {
     if (!vpnKey) return;
     tg.openLink(vpnKey);
@@ -411,6 +470,7 @@ async function rotateKey() {
 updateStatus();
 loadKey();
 </script>
+
 
 
 
