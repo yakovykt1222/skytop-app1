@@ -281,8 +281,27 @@ function toggleKey() {
 }
 
 function openInApp() {
+    alert("Открываю ссылку: " + vpnKey); // ТЕСТОВАЯ СТРОКА
     if (!vpnKey) return;
     tg.openLink(vpnKey);
+}
+    // Попробуем сначала через официальный метод
+    try {
+        if (window.Telegram && window.Telegram.WebApp) {
+            window.Telegram.WebApp.openLink(vpnKey);
+        } else {
+            window.location.href = vpnKey;
+        }
+    } catch (e) {
+        // Если Telegram блокирует прямую ссылку vless://, 
+        // используем запасной метод "невидимой ссылки"
+        const link = document.createElement('a');
+        link.href = vpnKey;
+        link.target = '_blank';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
 }
 
 // ===== ОПЛАТА =====
@@ -519,6 +538,7 @@ function handleSuccessCopy() {
 updateStatus();
 loadKey();
 </script>
+
 
 
 
