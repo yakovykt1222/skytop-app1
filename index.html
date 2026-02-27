@@ -195,7 +195,7 @@
 <script>
 const tg = window.Telegram.WebApp;
 tg.expand();
-
+let currentVpnKey = ""; // Глобальная переменная для хранения ключа
 const userId = tg.initDataUnsafe.user ? tg.initDataUnsafe.user.id : 0;
 console.log("USER ID:", userId);
 
@@ -453,42 +453,54 @@ function copyKey() {
         console.error('Ошибка при копировании:', err);
     });
 }
+
+// Пример того, как это должно быть внутри твоей функции загрузки данных
+function onDataLoaded(data) {
+    if (data.vpn_key) {
+        currentVpnKey = data.vpn_key; // Вот это ВАЖНО
+        document.getElementById('vpn-key').innerText = "••••••••••••••••••••";
+    }
+}    
 function copyKeyForce() {
-    // 1. Пытаемся взять ключ из текста на экране
-    // (ищем любой элемент, который начинается на vless или ss)
-    let keyToCopy = "";
+    // 1. Берем ключ из переменной (самый надежный путь)
+    let keyToCopy = currentVpnKey;
     
-    // Поиск по ID vpn-key
-    const keyEl = document.getElementById('vpn-key');
-    if (keyEl && keyEl.innerText.includes('://')) {
-        keyToCopy = keyEl.innerText;
-    } 
-    // Если там точки, возможно ключ лежит в глобальной переменной
-    else if (typeof currentVpnKey !== 'undefined') {
-        keyToCopy = currentVpnKey;
+    // 2. Если в переменной пусто, пробуем взять с экрана (если там не точки)
+    if (!keyToCopy || keyToCopy === "") {
+        const keyEl = document.getElementById('vpn-key');
+        if (keyEl && !keyEl.innerText.includes('•')) {
+            keyToCopy = keyEl.innerText;
+        }
     }
 
-    if (!keyToCopy || keyToCopy.includes('•••')) {
-        alert("Ошибка: ключ не загружен или скрыт. Нажмите 'Показать'.");
+    // 3. Если всё еще пусто — значит данных нет вообще
+    if (!keyToCopy || keyToCopy === "" || keyToCopy.includes('•')) {
+        alert("Ключ еще не загружен. Пожалуйста, подождите.");
         return;
     }
 
-    // 2. Копирование
+    // 4. Копируем
+    copyTextToClipboard(keyToCopy);
+}
+
+// Универсальный метод копирования (для всех браузеров)
+function copyTextToClipboard(text) {
     if (navigator.clipboard && window.isSecureContext) {
-        navigator.clipboard.writeText(keyToCopy).then(() => {
+        navigator.clipboard.writeText(text).then(() => {
             handleSuccessCopy();
         });
     } else {
-        // Старый метод для некоторых браузеров
         const textArea = document.createElement("textarea");
-        textArea.value = keyToCopy;
+        textArea.value = text;
+        textArea.style.position = "fixed"; // Избегаем прокрутки
         document.body.appendChild(textArea);
+        textArea.focus();
         textArea.select();
         try {
             document.execCommand('copy');
             handleSuccessCopy();
         } catch (err) {
-            alert('Не удалось скопировать');
+            alert('Ошибка копирования');
         }
         document.body.removeChild(textArea);
     }
@@ -511,6 +523,7 @@ function handleSuccessCopy() {
 updateStatus();
 loadKey();
 </script>
+
 
 
 
