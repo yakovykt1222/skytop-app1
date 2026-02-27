@@ -335,35 +335,44 @@ function processPayment() {
     }));
 }
 
-async function pay(amount) {
-    // Получаем user_id из Telegram WebApp API
-    const tg = window.Telegram.WebApp;
-    const userId = tg.initDataUnsafe.user.id;
 
-    try {
-        const response = await fetch('https://api.skytop.space/create-payment', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                amount: amount,
-                user_id: userId
-            })
-        });
-
-        const data = await response.json();
-
-        if (data.link) {
-            // Открываем ссылку на оплату внутри Telegram
-            tg.openLink(data.link);
-        } else {
-            alert("Ошибка при создании платежа");
+ // Выбор цены
+        let chosenAmount = 0;
+        function selectPrice(amount, element) {
+            chosenAmount = amount;
+            document.querySelectorAll('.opt-btn').forEach(btn => btn.classList.remove('active'));
+            element.classList.add('active');
+            const payBtn = document.getElementById('confirm-pay-btn');
+            payBtn.style.display = 'block';
+            payBtn.innerText = `Подтвердить и оплатить ${amount} ₽`;
         }
-    } catch (e) {
-        console.error("Ошибка:", e);
-        alert("Сервер недоступен");
-    }
-}
 
+        // Оплата
+        async function processPayment() {
+            const btn = document.getElementById('confirm-pay-btn');
+            btn.disabled = true;
+            btn.innerText = "Подключение к банку...";
+            try {
+                const response = await fetch(`${NGROK_URL}/create-payment`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ amount: chosenAmount, user_id: userId })
+                });
+                const result = await response.json();
+                if (result.link) {
+                    tg.openLink(result.link);
+                } else {
+                    tg.showAlert("Ошибка: " + result.error);
+                }
+            } catch (err) {
+                tg.showAlert("Сервер не отвечает.");
+            } finally {
+                btn.disabled = false;
+                btn.innerText = `Подтвердить и оплатить ${chosenAmount} ₽`;
+            }
+        }
+
+    
 
     
 // ===== СМЕНА КЛЮЧА =====
@@ -420,6 +429,7 @@ async function rotateKey() {
 updateStatus();
 loadKey();
 </script>
+
 
 
 
