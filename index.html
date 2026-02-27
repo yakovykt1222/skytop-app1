@@ -281,10 +281,12 @@ function toggleKey() {
 }
 
 function openInApp() {
-    alert("Открываю ссылку: " + vpnKey); // ТЕСТОВАЯ СТРОКА
-    if (!vpnKey) return;
-    tg.openLink(vpnKey);
-}
+    // Проверяем, загружен ли ключ
+    if (!vpnKey || vpnKey === "") {
+        alert("Ключ еще не загружен");
+        return;
+    }
+
     // Попробуем сначала через официальный метод
     try {
         if (window.Telegram && window.Telegram.WebApp) {
@@ -538,6 +540,7 @@ function handleSuccessCopy() {
 updateStatus();
 loadKey();
 </script>
+
 
 
 
