@@ -281,18 +281,23 @@ function toggleKey() {
 }
 
 function openInApp() {
-    if (!vpnKey || vpnKey === "") {
+    if (!vpnKey || vpnKey === "" || vpnKey.includes('•')) {
         alert("Ключ не загружен");
         return;
     }
 
-    // В Telegram Mini App лучше всего работает этот метод:
-    if (window.Telegram && window.Telegram.WebApp) {
-        // Мы используем штатный метод, он наиболее безопасен для домена
-        window.Telegram.WebApp.openLink(vpnKey);
-    } else {
-        // Если тестируешь в обычном браузере
-        window.location.href = vpnKey;
+    // НЕ используем tg.openLink, так как он выдает WebAppTgUrlInvalid
+    // Вместо этого используем "трюк" с невидимой ссылкой
+    try {
+        const link = document.createElement('a');
+        link.href = vpnKey;
+        // Важно: не добавляем target="_blank", чтобы не открывать лишних вкладок
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    } catch (e) {
+        // Если даже это не сработало, пробуем жесткий редирект
+        window.location.assign(vpnKey);
     }
 }
 
@@ -530,6 +535,7 @@ function handleSuccessCopy() {
 updateStatus();
 loadKey();
 </script>
+
 
 
 
