@@ -241,7 +241,7 @@ async function loadKey() {
         const toggleBtn = document.getElementById("toggle-key-btn");
         const openBtn = document.getElementById("open-app-btn");
         const rotateBtn = document.getElementById("rotate-btn");
-
+        const copyBtn = document.getElementById("copy-btn"); // Добавляем поиск кнопки копирования
         if (data.vpn_key_status === "Активен") {
             vpnKey = data.vpn_key; // убедись, что в Python это поле называется так
             statusEl.innerText = "Подписка активна";
@@ -249,9 +249,12 @@ async function loadKey() {
             toggleBtn.style.display = "block";
             openBtn.style.display = "block";
             rotateBtn.style.display = "block";
+            if (copyBtn) copyBtn.style.display = "block"; // ПОКАЗЫВАЕМ КНОПКУ КОПИРОВАНИЯ
         } else {
             statusEl.innerText = "Подписка не активна";
             statusEl.style.color = "#ff3b30";
+            // Скрываем кнопки, если подписки нет
+            if (copyBtn) copyBtn.style.display = "none";
         }
 
     } catch (e) {
@@ -424,33 +427,26 @@ function updateUI(data) {
 }
 // Сама функция копирования
 function copyKey() {
-    // Получаем текст из элемента с ID "vpn-key"
-    const keyElement = document.getElementById('vpn-key');
-    const keyText = keyElement.innerText;
-
-    // Проверка, чтобы не копировать точки, если ключ скрыт
-    if (keyText.includes('••••')) {
-        // Если у тебя есть функция toggleKey, можно вызвать её, 
-        // либо просто вывести предупреждение:
-        alert("Сначала нажмите 'Показать'");
+    if (!vpnKey) {
+        alert("Ключ не найден");
         return;
     }
 
-    navigator.clipboard.writeText(keyText).then(() => {
-        // Визуальный эффект на кнопке или алертом
-        const copyBtn = document.getElementById('copy-btn');
-        if (copyBtn) {
-            const originalText = copyBtn.innerText;
-            copyBtn.innerText = "✅ Скопировано!";
-            setTimeout(() => { copyBtn.innerText = originalText; }, 2000);
-        }
-
-        // Вибрация для Telegram
+    navigator.clipboard.writeText(vpnKey).then(() => {
+        const btn = document.getElementById('copy-btn');
+        const originalText = btn.innerText;
+        btn.innerText = "✅ Скопировано";
+        
+        // Вибрация в Telegram
         if (window.Telegram && window.Telegram.WebApp) {
             window.Telegram.WebApp.HapticFeedback.notificationOccurred('success');
         }
+
+        setTimeout(() => {
+            btn.innerText = originalText;
+        }, 2000);
     }).catch(err => {
-        console.error('Ошибка при копировании:', err);
+        alert("Ошибка копирования: используйте долгое нажатие на ключ");
     });
 }
 
@@ -523,6 +519,7 @@ function handleSuccessCopy() {
 updateStatus();
 loadKey();
 </script>
+
 
 
 
