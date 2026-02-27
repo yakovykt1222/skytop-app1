@@ -133,7 +133,12 @@
             font-size: 16px;
         } 
 
-        
+        .btn-ref {
+            padding: 8px 12px; /* Уменьши эти значения, если кнопки не лезут в ряд */
+            font-size: 13px;
+            flex: 1;           /* Чтобы кнопки были одинаковой ширины */
+            min-width: 100px;
+        }
  /* Сетка выбора суммы */
         .amounts-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
         .opt-btn { background: #f2f2f7; border: 2px solid transparent; border-radius: 12px; padding: 12px 5px; font-size: 15px; font-weight: 700; cursor: pointer; transition: all 0.2s ease; }
@@ -195,7 +200,11 @@
             <button class="btn-ref" onclick="toggleKey()" id="toggle-key-btn" style="display:none;">
                 👁 Показать
             </button>
-
+            
+            <button class="btn-ref" onclick="copyKey()" id="copy-key-btn" style="display:none;">
+                📋 Копировать
+            </button>
+            
             <button class="btn-ref" onclick="openInApp()" id="open-app-btn" style="display:none;">
                 🚀 Открыть
             </button>
@@ -309,26 +318,33 @@ function toggleKey() {
     }
 }
 function copyKey() {
-    // Находим текст ключа
-    const keyText = document.getElementById('vpn-key').innerText;
+    // Предполагаем, что текст ключа хранится в элементе с id="vpn-key-text" 
+    // или в переменной vpnKey. Замени на свой ID, если он другой.
+    const keyElement = document.getElementById('vpn-key-text');
+    const keyText = keyElement ? keyElement.innerText : "";
 
-    // Копируем в буфер обмена
+    if (!keyText || keyText.includes('••••')) {
+        // Если ключ скрыт звездами, сначала "показываем" его или берем из переменной
+        alert("Сначала нажмите 'Показать', чтобы скопировать ключ");
+        return;
+    }
+
     navigator.clipboard.writeText(keyText).then(() => {
-        // Показываем уведомление "Скопировано"
-        const status = document.getElementById('copy-status');
-        status.style.display = 'block';
+        // Визуальный отклик на кнопке
+        const btn = document.getElementById('copy-key-btn');
+        const originalText = btn.innerHTML;
+        btn.innerHTML = "✅ Готово!";
         
-        // Вибрация (работает в Telegram)
+        // Вибрация для Telegram
         if (window.Telegram && window.Telegram.WebApp) {
             window.Telegram.WebApp.HapticFeedback.notificationOccurred('success');
         }
 
-        // Скрываем надпись через 2 секунды
         setTimeout(() => {
-            status.style.display = 'none';
+            btn.innerHTML = originalText;
         }, 2000);
     }).catch(err => {
-        console.error('Ошибка при копировании: ', err);
+        console.error('Ошибка копирования:', err);
     });
 }
 function openInApp() {
@@ -470,6 +486,7 @@ async function rotateKey() {
 updateStatus();
 loadKey();
 </script>
+
 
 
 
