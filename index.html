@@ -110,9 +110,16 @@
 </head>
 <body>
 
-<div class="header">
-    <div class="logo">SkyTop VPN</div>
-</div>
+ <div class="header">
+        <div class="logo">SkyTop VPN</div>
+        <div class="menu-container">
+            <button class="menu-btn" onclick="toggleMenu()">⋮</button>
+            <div id="dropdown-menu" class="dropdown-content">
+                <a href="#" onclick="openSupport()">💬 Поддержка</a>
+                <a href="#" onclick="showRules()">📜 Правила и Оферта</a>
+            </div>
+        </div>
+    </div>
 
 
 <div class="container">
@@ -135,9 +142,6 @@
             <button class="btn-confirm" id="confirm-pay-btn" onclick="processPayment()">Подтвердить и оплатить</button>
         </div>
 
-
-    
-<div class="container">
 
     <!-- СТАТУС -->
     <div class="card">
@@ -384,6 +388,7 @@ async function rotateKey() {
 updateStatus();
 loadKey();
 </script>
+
 
 
 
