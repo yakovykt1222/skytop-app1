@@ -44,7 +44,7 @@
         .card { 
             background: var(--card-bg); 
             border-radius: 20px; 
-            width: auto%; 
+            width: 75%; 
             max-width: 400px; 
             padding: 20px; 
             box-shadow: 0 4px 15px rgba(0,0,0,0.05); 
@@ -107,13 +107,6 @@
             margin-top:10px;
         }
        
-
-        .btn-ref {
-            padding: 8px 12px; /* Уменьши эти значения, если кнопки не лезут в ряд */
-            font-size: 13px;
-            flex: 1;           /* Чтобы кнопки были одинаковой ширины */
-            min-width: 100px;
-        }
  /* Сетка выбора суммы */
         .amounts-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
         .opt-btn { background: #f2f2f7; border: 2px solid transparent; border-radius: 12px; padding: 12px 5px; font-size: 15px; font-weight: 700; cursor: pointer; transition: all 0.2s ease; }
@@ -292,36 +285,7 @@ function toggleKey() {
         btn.innerText = "👁 Показать";
     }
 }
-function copyKey() {
-    // Предполагаем, что текст ключа хранится в элементе с id="vpn-key-text" 
-    // или в переменной vpnKey. Замени на свой ID, если он другой.
-    const keyElement = document.getElementById('vpn-key-text');
-    const keyText = keyElement ? keyElement.innerText : "";
 
-    if (!keyText || keyText.includes('••••')) {
-        // Если ключ скрыт звездами, сначала "показываем" его или берем из переменной
-        alert("Сначала нажмите 'Показать', чтобы скопировать ключ");
-        return;
-    }
-
-    navigator.clipboard.writeText(keyText).then(() => {
-        // Визуальный отклик на кнопке
-        const btn = document.getElementById('copy-key-btn');
-        const originalText = btn.innerHTML;
-        btn.innerHTML = "✅ Готово!";
-        
-        // Вибрация для Telegram
-        if (window.Telegram && window.Telegram.WebApp) {
-            window.Telegram.WebApp.HapticFeedback.notificationOccurred('success');
-        }
-
-        setTimeout(() => {
-            btn.innerHTML = originalText;
-        }, 2000);
-    }).catch(err => {
-        console.error('Ошибка копирования:', err);
-    });
-}
 function openInApp() {
     if (!vpnKey) return;
     tg.openLink(vpnKey);
@@ -454,25 +418,50 @@ async function rotateKey() {
         }
 
 
+// Внутри функции, где ты обрабатываешь данные пользователя (например, updateUserData)
 function updateUI(data) {
     if (data.vpn_key) {
-        // Находим наши кнопки
+        // Показываем кнопки
         document.getElementById('toggle-key-btn').style.display = 'block';
         document.getElementById('open-app-btn').style.display = 'block';
-        
-        // ДОБАВЬ ЭТУ СТРОЧКУ:
-        document.getElementById('copy-btn').style.display = 'block'; 
-        
-        // Обновляем сам текст ключа
-        document.getElementById('vpn-key-text').innerText = data.vpn_key;
+        document.getElementById('copy-btn').style.display = 'block'; // ЭТА СТРОКА ВКЛЮЧИТ КНОПКУ
+
+        // Записываем ключ в блок (id должен совпадать с тем, что в HTML)
+        const keyBox = document.getElementById('vpn-key-box'); 
+        if(keyBox) keyBox.innerText = data.vpn_key;
     }
 }
+// Сама функция копирования
+function copyKey() {
+    // Получаем текст из элемента, где лежит ключ
+    const keyText = document.getElementById('vpn-key-box').innerText;
+    
+    if (!keyText || keyText.includes('•••')) {
+        // Если ключ скрыт, можно либо выдать алерт, либо копировать из переменной
+        alert("Сначала нажмите 'Показать'");
+        return;
+    }
 
+    navigator.clipboard.writeText(keyText).then(() => {
+        // Красивое уведомление на кнопке
+        const btn = document.getElementById('copy-btn');
+        const oldText = btn.innerText;
+        btn.innerText = "✅ Ок!";
+        
+        // Вибрация (для Telegram)
+        if (window.Telegram && window.Telegram.WebApp) {
+            window.Telegram.WebApp.HapticFeedback.notificationOccurred('success');
+        }
+
+        setTimeout(() => { btn.innerText = oldText; }, 2000);
+    });
+}
     
 // ===== ЗАПУСК =====
 updateStatus();
 loadKey();
 </script>
+
 
 
 
