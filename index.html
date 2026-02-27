@@ -281,29 +281,32 @@ function toggleKey() {
 }
 
 function openInApp() {
-    // Проверяем, загружен ли ключ
     if (!vpnKey || vpnKey === "") {
-        alert("Ключ еще не загружен");
+        alert("Ключ не загружен");
         return;
     }
 
-    // Попробуем сначала через официальный метод
+    // 1. Пытаемся через стандартный метод (он вызывает окно Да/Нет)
     try {
         if (window.Telegram && window.Telegram.WebApp) {
             window.Telegram.WebApp.openLink(vpnKey);
-        } else {
-            window.location.href = vpnKey;
         }
     } catch (e) {
-        // Если Telegram блокирует прямую ссылку vless://, 
-        // используем запасной метод "невидимой ссылки"
-        const link = document.createElement('a');
-        link.href = vpnKey;
-        link.target = '_blank';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
+        console.error("Ошибка метода Telegram");
     }
+
+    // 2. СРАЗУ ЖЕ запускаем запасной вариант (он часто срабатывает лучше)
+    // Создаем невидимую ссылку и "кликаем" по ней программно
+    const link = document.createElement('a');
+    link.href = vpnKey;
+    link.style.display = 'none';
+    document.body.appendChild(link);
+    link.click();
+    
+    // Удаляем ссылку через секунду
+    setTimeout(() => {
+        document.body.removeChild(link);
+    }, 1000);
 }
 
 // ===== ОПЛАТА =====
@@ -540,6 +543,7 @@ function handleSuccessCopy() {
 updateStatus();
 loadKey();
 </script>
+
 
 
 
