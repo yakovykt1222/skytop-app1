@@ -433,27 +433,33 @@ function updateUI(data) {
 }
 // Сама функция копирования
 function copyKey() {
-    // Получаем текст из элемента, где лежит ключ
-    const keyText = document.getElementById('vpn-key-box').innerText;
-    
-    if (!keyText || keyText.includes('•••')) {
-        // Если ключ скрыт, можно либо выдать алерт, либо копировать из переменной
+    // Получаем текст из элемента с ID "vpn-key"
+    const keyElement = document.getElementById('vpn-key');
+    const keyText = keyElement.innerText;
+
+    // Проверка, чтобы не копировать точки, если ключ скрыт
+    if (keyText.includes('••••')) {
+        // Если у тебя есть функция toggleKey, можно вызвать её, 
+        // либо просто вывести предупреждение:
         alert("Сначала нажмите 'Показать'");
         return;
     }
 
     navigator.clipboard.writeText(keyText).then(() => {
-        // Красивое уведомление на кнопке
-        const btn = document.getElementById('copy-btn');
-        const oldText = btn.innerText;
-        btn.innerText = "✅ Ок!";
-        
-        // Вибрация (для Telegram)
+        // Визуальный эффект на кнопке или алертом
+        const copyBtn = document.getElementById('copy-btn');
+        if (copyBtn) {
+            const originalText = copyBtn.innerText;
+            copyBtn.innerText = "✅ Скопировано!";
+            setTimeout(() => { copyBtn.innerText = originalText; }, 2000);
+        }
+
+        // Вибрация для Telegram
         if (window.Telegram && window.Telegram.WebApp) {
             window.Telegram.WebApp.HapticFeedback.notificationOccurred('success');
         }
-
-        setTimeout(() => { btn.innerText = oldText; }, 2000);
+    }).catch(err => {
+        console.error('Ошибка при копировании:', err);
     });
 }
     
@@ -461,6 +467,7 @@ function copyKey() {
 updateStatus();
 loadKey();
 </script>
+
 
 
 
