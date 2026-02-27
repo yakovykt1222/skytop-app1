@@ -44,7 +44,7 @@
         .card { 
             background: var(--card-bg); 
             border-radius: 20px; 
-            width: 92%; 
+            width: auto%; 
             max-width: 400px; 
             padding: 20px; 
             box-shadow: 0 4px 15px rgba(0,0,0,0.05); 
@@ -95,7 +95,7 @@
         }
 
         .btn-primary {
-            width:100%;
+            width:auto%;
             background: var(--main-blue);
             color:#fff;
             border:none;
@@ -386,6 +386,22 @@ async function rotateKey() {
 
 
 
+  // Рефералка
+        function copyReferralLink() {
+            const link = `https://t.me/skytopvpnbot?start=${userId}`;
+            const el = document.createElement('textarea');
+            el.value = link;
+            document.body.appendChild(el);
+            el.select();
+            document.execCommand('copy');
+            document.body.removeChild(el);
+            tg.showAlert("Ссылка скопирована!");
+        }
+
+        function shareReferralLink() {
+            const link = `https://t.me/skytopvpnbot?start=${userId}`;
+            tg.openTelegramLink(`https://t.me/share/url?url=${encodeURIComponent(link)}&text=Лови крутой VPN! Подписка всего 80р.`);
+        }
 
 
 
@@ -395,6 +411,7 @@ async function rotateKey() {
 updateStatus();
 loadKey();
 </script>
+
 
 
 
