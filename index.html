@@ -106,32 +106,7 @@
             cursor:pointer;
             margin-top:10px;
         }
-        .key-card {
-            cursor: pointer;
-            transition: transform 0.1s;
-            position: relative;
-        }
-
-        .key-card:active {
-            transform: scale(0.98); /* Эффект нажатия */
-        }
-
-        .key-display {
-            background: #f4f4f4;
-            padding: 12px;
-            border-radius: 10px;
-            font-family: monospace;
-            font-size: 13px;
-            word-break: break-all; /* Чтобы длинный ключ не вылезал за края */
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .copy-icon {
-            margin-left: 10px;
-            font-size: 16px;
-        } 
+       
 
         .btn-ref {
             padding: 8px 12px; /* Уменьши эти значения, если кнопки не лезут в ряд */
@@ -486,6 +461,7 @@ async function rotateKey() {
 updateStatus();
 loadKey();
 </script>
+
 
 
 
