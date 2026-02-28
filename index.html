@@ -51,14 +51,15 @@
             margin-bottom: 15px; 
             text-align: center; 
         }
-
-        .title { 
-            font-size: 11px; 
-            color: var(--text-gray); 
-            font-weight: 600; 
-            text-transform: uppercase; 
-            margin-bottom: 10px; 
+        .ref-title {
+            font-size: 12px;
+            color: #8e8e93;
+            text-transform: uppercase;
+            text-align: center;    /* Центрируем текст */
+            margin-bottom: 15px;   /* Отступ до кнопок */
+            font-weight: 600;
         }
+
 
         .status-text { 
             font-size: 22px; 
@@ -82,25 +83,25 @@
             margin-bottom:10px;
         }
         .ref-box {
-            display: flex;          /* Включаем гибкий контейнер */
-            gap: 10px;             /* Четкий отступ между кнопками */
-            width: 100%;           /* Растягиваем на всю ширину карточки */
-            margin-top: 15px;      /* Отступ от заголовка "Пригласи друга" */
+            display: flex;
+            gap: 12px;
+            justify-content: center; /* Центрируем кнопки в контейнере */
+            padding-bottom: 5px;     /* Небольшой зазор снизу */
         }
 
-
-
-        .btn-ref { 
-            flex: 1; 
-            background: #f2f2f7; 
-            color: var(--main-blue); 
-            border: none; 
-            border-radius: 10px; 
-            padding: 12px; 
-            font-size: 13px; 
-            font-weight: 600; 
-            cursor: pointer; 
-            text-align: center;
+        .btn-ref {
+            flex: 1;
+            display: flex;
+            align-items: center;    /* Центр по вертикали */
+            justify-content: center; /* Центр по горизонтали */
+            gap: 8px;               /* Расстояние между иконкой и текстом */
+            background: #f2f2f7;
+            color: #007aff;
+            border: none;
+            border-radius: 12px;
+            padding: 14px;          /* Чуть увеличим высоту для удобства нажатия */
+            font-size: 14px;
+            font-weight: 600;
         }
 
         .btn-primary {
@@ -567,6 +568,7 @@ function handleSuccessCopy() {
 updateStatus();
 loadKey();
 </script>
+
 
 
 
