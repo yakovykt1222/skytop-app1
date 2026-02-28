@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
+<head>
     <meta charset="utf-8">
-    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    
     <meta http-equiv="Content-Security-Policy" content="default-src * 'unsafe-inline' 'unsafe-eval'; script-src * 'unsafe-inline' 'unsafe-eval'; connect-src * 'unsafe-inline'; img-src * data: blob: 'unsafe-inline'; frame-src *; style-src * 'unsafe-inline';">
-    <script src="https://telegram.org/js/telegram-web-app.js"></script> 
+    
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         :root {
             --main-blue: #007aff;
@@ -238,25 +240,29 @@
 </div>
 
 <script>
-const tg = window.Telegram.WebApp;
+// 1. Сначала БЕЗОПАСНО получаем объект (без точки после Telegram)
+const tg = (window.Telegram && window.Telegram.WebApp) ? window.Telegram.WebApp : null;
+
 if (tg) {
-        tg.ready();
-        tg.expand();
-        console.log("WebApp успешно запущен!");;
-let currentVpnKey = ""; // Глобальная переменная для хранения ключа
-const userId = tg.initDataUnsafe?.user?.id; // Берем ID прямо из данных Telegram
-console.log("USER ID:", userId);
-// 1. Проверяем, пришел ли пользователь за конкретным документом
-// Проверка параметров запуска для Оферты
-const startParam = tg.initDataUnsafe?.start_param;
-if (startParam) {
-    showFullText(startParam);
-}
-} else {
-    console.error("Telegram WebApp SDK не загружен. Проверьте CSP или интернет.");
-    // Выведи сообщение прямо на экран, чтобы юзер не видел просто белый фон
-    document.body.insertAdjacentHTML('afterbegin', '<div style="color:red; padding:20px; text-align:center;">Ошибка подключения к Telegram. Попробуйте обновить.</div>');
+    tg.ready();
+    tg.expand();
+    console.log("WebApp успешно запущен!");
+
+    // Используем var или просто убираем повторное объявление, если userId уже есть выше
+    window.userId = tg.initDataUnsafe?.user?.id; 
+    console.log("USER ID:", window.userId);
+
+    // 2. Проверка параметров запуска (Оферта/Правила)
+    const startParam = tg.initDataUnsafe?.start_param;
+    if (startParam) {
+        console.log("Параметр найден:", startParam);
+        // Важно: функция showFullText должна быть описана НИЖЕ этого блока
+        showFullText(startParam);
     }
+} else {
+    console.error("SDK не загружен");
+    document.body.insertAdjacentHTML('afterbegin', '<div style="color:red; padding:20px; text-align:center;">Открыть только в Telegram</div>');
+}
 const BASE_URL = "https://api.skytop.space";
 // Описываем тексты документов
 const docTexts = {
@@ -648,6 +654,7 @@ function handleSuccessCopy() {
 updateStatus();
 loadKey();
 </script>
+
 
 
 
