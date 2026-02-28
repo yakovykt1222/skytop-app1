@@ -535,19 +535,7 @@ function copyTextToClipboard(text) {
     }
 }
 
-async def is_new_user(user_id):
-    # Проверка в твоей таблице: если ID нет, значит новый
-    user = await db.get_user(user_id) 
-    return user is None
 
-async def add_bonus_days(user_id, days):
-    # Псевдокод: увеличиваем дату окончания подписки на 7 дней
-    # Если подписка уже кончилась, прибавляем от сегодняшнего дня
-    # Если еще активна — прибавляем к дате окончания
-    await db.execute(
-        "UPDATE users SET expires_at = MAX(expires_at, CURRENT_DATE) + INTERVAL '7 days' WHERE user_id = ?", 
-        (user_id,)
-    )
 
     
 function handleSuccessCopy() {
@@ -567,6 +555,7 @@ function handleSuccessCopy() {
 updateStatus();
 loadKey();
 </script>
+
 
 
 
