@@ -151,57 +151,43 @@
     </div>
 
     <!-- КЛЮЧ -->
-    <div class="card">
-        <div class="title">Выберите сумму пополнения:</div>
-        <div class="amounts-grid">
-            <button class="opt-btn" onclick="selectPrice(80, this)">80 ₽</button>
-            <button class="opt-btn" onclick="selectPrice(160, this)">160 ₽</button>
-            <button class="opt-btn" onclick="selectPrice(240, this)">240 ₽</button>
-            <button class="opt-btn" onclick="selectPrice(320, this)">320 ₽</button>
-            <button class="opt-btn" onclick="selectPrice(400, this)">400 ₽</button>
-            <button class="opt-btn" onclick="selectPrice(480, this)">480 ₽</button>
-            <button class="opt-btn" onclick="selectPrice(560, this)">560 ₽</button>
-            <button class="opt-btn" onclick="selectPrice(640, this)">640 ₽</button>
-            <button class="opt-btn" onclick="selectPrice(720, this)">720 ₽</button>
-        </div>
-        <button class="btn-confirm" id="confirm-pay-btn" onclick="processPayment()">Подтвердить и оплатить</button>
+<div class="card">
+    <div class="title">Выберите сумму пополнения:</div>
+    <div class="amounts-grid">
+        <button class="opt-btn" onclick="selectPrice(80, this)">80 ₽</button>
+        <button class="opt-btn" onclick="selectPrice(160, this)">160 ₽</button>
+        <button class="opt-btn" onclick="selectPrice(240, this)">240 ₽</button>
+        <button class="opt-btn" onclick="selectPrice(320, this)">320 ₽</button>
+        <button class="opt-btn" onclick="selectPrice(400, this)">400 ₽</button>
+        <button class="opt-btn" onclick="selectPrice(480, this)">480 ₽</button>
+        <button class="opt-btn" onclick="selectPrice(560, this)">560 ₽</button>
+        <button class="opt-btn" onclick="selectPrice(640, this)">640 ₽</button>
+        <button class="opt-btn" onclick="selectPrice(720, this)">720 ₽</button>
     </div>
-        
-        <div class="title">Ваш VPN ключ</div>
-
-        <div id="key-status" style="font-size:13px;color:#8e8e93;margin-bottom:10px;">
-            Проверяем подписку...
-        </div>
-
-        <div id="key-box" class="key-box">
-            ••••••••••••••••••••••••••
-        </div>
-
-        <div style="display:flex;gap:8px;">
-            <button class="btn-ref" onclick="toggleKey()" id="toggle-key-btn" style="display:none;">
-                👁 Показать
-            </button>
-            
-            <button class="btn-ref" onclick="copyKey()" id="copy-btn" style="display:none;">
-                📋 Копировать
-            </button>
-            
-            <button class="btn-ref" onclick="openInApp()" id="open-app-btn" style="display:none;">
-                🚀 Открыть
-            </button>
-        </div>
-
-        <button class="btn-primary" onclick="rotateKey()" id="rotate-btn" style="display:none;">
-            🔄 Сменить ключ
-        </button>
+    <button class="btn-confirm" id="confirm-pay-btn" onclick="processPayment()">Подтвердить и оплатить</button>
+</div> <div class="card">
+    <div class="title">Ваш VPN ключ</div>
+    <div id="key-status" style="font-size:13px;color:#8e8e93;margin-bottom:10px; text-align: center;">
+        Проверяем подписку...
     </div>
-    <div class="card">
-        <div class="title">Пригласи друга (+7 дней)</div>
-        <div class="ref-box">
-            <button class="btn-ref" onclick="copyReferralLink()">📋 Копировать</button>
-            <button class="btn-ref" onclick="shareReferralLink()">🔗 Отправить</button>
-        </div>
+    <div id="key-box" class="key-box">
+        ••••••••••••••••••••••••••
     </div>
+    <div style="display:flex; gap:8px; margin-top: 10px;">
+        <button class="btn-ref" onclick="toggleKey()" id="toggle-key-btn" style="display:none;">👁 Показать</button>
+        <button class="btn-ref" onclick="copyKey()" id="copy-btn" style="display:none;">📋 Копировать</button>
+        <button class="btn-ref" onclick="openInApp()" id="open-app-btn" style="display:none;">🚀 Открыть</button>
+    </div>
+    <button class="btn-primary" onclick="rotateKey()" id="rotate-btn" style="display:none; margin-top: 10px; width: 100%;">
+        🔄 Сменить ключ
+    </button>
+</div> <div class="card">
+    <div class="title" style="text-align: center;">Пригласи друга (+7 дней)</div>
+    <div class="ref-box" style="display: flex; gap: 10px; margin-top: 15px;">
+        <button class="btn-ref" onclick="copyReferralLink()" style="flex: 1;">📋 Копировать</button>
+        <button class="btn-ref" onclick="shareReferralLink()" style="flex: 1;">🔗 Отправить</button>
+    </div>
+</div>
        
  
 
@@ -568,6 +554,7 @@ function handleSuccessCopy() {
 updateStatus();
 loadKey();
 </script>
+
 
 
 
