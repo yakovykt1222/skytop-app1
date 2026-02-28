@@ -240,29 +240,36 @@
 </div>
 
 <script>
-// 1. Сначала БЕЗОПАСНО получаем объект (без точки после Telegram)
-const tg = (window.Telegram && window.Telegram.WebApp) ? window.Telegram.WebApp : null;
+// 1. Сразу объявляем все переменные, чтобы не было ReferenceError
+    var tg = window.Telegram ? window.Telegram.WebApp : null;
+    var userId = null;
+    var startParam = null;
 
-if (tg) {
-    tg.ready();
-    tg.expand();
-    console.log("WebApp успешно запущен!");
+    // 2. Функция, которая выполнится только когда всё дерево HTML готово
+    window.addEventListener('load', function() {
+        if (tg) {
+            try {
+                tg.ready();
+                tg.expand();
+                console.log("WebApp успешно запущен!");
 
-    // Используем var или просто убираем повторное объявление, если userId уже есть выше
-    window.userId = tg.initDataUnsafe?.user?.id; 
-    console.log("USER ID:", window.userId);
+                // Получаем данные
+                userId = tg.initDataUnsafe?.user?.id;
+                startParam = tg.initDataUnsafe?.start_param;
 
-    // 2. Проверка параметров запуска (Оферта/Правила)
-    const startParam = tg.initDataUnsafe?.start_param;
-    if (startParam) {
-        console.log("Параметр найден:", startParam);
-        // Важно: функция showFullText должна быть описана НИЖЕ этого блока
-        showFullText(startParam);
-    }
-} else {
-    console.error("SDK не загружен");
-    document.body.insertAdjacentHTML('afterbegin', '<div style="color:red; padding:20px; text-align:center;">Открыть только в Telegram</div>');
-}
+                console.log("USER ID:", userId);
+                
+                if (startParam) {
+                    console.log("Найден параметр запуска:", startParam);
+                    showFullText(startParam);
+                }
+            } catch (e) {
+                console.error("Ошибка внутри инициализации:", e);
+            }
+        } else {
+            console.error("Telegram SDK не найден");
+        }
+    });
 const BASE_URL = "https://api.skytop.space";
 // Описываем тексты документов
 const docTexts = {
@@ -605,28 +612,22 @@ function copyTextToClipboard(text) {
 
 
 // 2. Функция отображения текста
-    function showFullText(type) {
+function showFullText(type) {
         const texts = {
-            agreement: "<h2>Согласие</h2><p>Текст вашего согласия...</p>",
-            offer: "<h2>Публичная оферта</h2><p>1. Активация сразу...<br>2. Возврат при поломке...</p>",
-            privacy: "<h2>Политика конфиденциальности</h2><p>Мы не храним логи...</p>"
+            agreement: "<h1>Согласие</h1><p>Текст...</p>",
+            offer: "<h1>Оферта</h1><p>Текст...</p>",
+            privacy: "<h1>Политика</h1><p>Текст...</p>"
         };
 
-        const content = texts[type] || "Текст не найден";
-        
-        // Показываем слой с текстом (id="text-screen" из прошлого шага)
+        const content = texts[type] || "Документ не найден";
         const screen = document.getElementById('text-screen');
         const area = document.getElementById('content-area');
-        
+
         if (screen && area) {
             area.innerHTML = content;
             screen.style.display = 'block';
-            
-            // Нативная кнопка "Назад" в Telegram, чтобы закрыть Mini App
             tg.BackButton.show();
-            tg.BackButton.onClick(() => {
-                tg.close(); // Закрываем Mini App, так как юзер пришел только почитать документ
-            });
+            tg.BackButton.onClick(() => { tg.close(); });
         }
     }
 
@@ -650,6 +651,7 @@ function handleSuccessCopy() {
 updateStatus();
 loadKey();
 </script>
+
 
 
 
