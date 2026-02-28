@@ -243,13 +243,17 @@ tg.expand();
 let currentVpnKey = ""; // Глобальная переменная для хранения ключа
 const userId = tg.initDataUnsafe?.user?.id; // Берем ID прямо из данных Telegram
 console.log("USER ID:", userId);
-
+// 1. Проверяем, пришел ли пользователь за конкретным документом
+const startParam = tg.initDataUnsafe?.start_param;
 const BASE_URL = "https://api.skytop.space";
 
 let vpnKey = "";
 let keyVisible = false;
 let selectedPrice = 0;
-
+if (startParam) {
+        // Если есть параметр (agreement, offer или privacy), сразу показываем текст
+        showFullText(startParam);
+    }
 // ===== СТАТУС =====
 async function updateStatus() {
     try {
@@ -585,22 +589,32 @@ const texts = {
     privacy: "<h1>Политика конфиденциальности</h1><p>Мы не храним логи ваших действий...</p>"
 };
 
-function showDocsMenu() {
-    document.getElementById('docs-menu').style.display = 'block';
-}
+// 2. Функция отображения текста
+    function showFullText(type) {
+        const texts = {
+            agreement: "<h2>Согласие</h2><p>Текст вашего согласия...</p>",
+            offer: "<h2>Публичная оферта</h2><p>1. Активация сразу...<br>2. Возврат при поломке...</p>",
+            privacy: "<h2>Политика конфиденциальности</h2><p>Мы не храним логи...</p>"
+        };
 
-function hideDocsMenu() {
-    document.getElementById('docs-menu').style.display = 'none';
-}
-
-function showFullText(type) {
-    document.getElementById('content-area').innerHTML = texts[type];
-    document.getElementById('text-screen').style.display = 'block';
-}
-
-function hideFullText() {
-    document.getElementById('text-screen').style.display = 'none';
-}
+        const content = texts[type] || "Текст не найден";
+        
+        // Показываем слой с текстом (id="text-screen" из прошлого шага)
+        const screen = document.getElementById('text-screen');
+        const area = document.getElementById('content-area');
+        
+        if (screen && area) {
+            area.innerHTML = content;
+            screen.style.display = 'block';
+            
+            // Нативная кнопка "Назад" в Telegram, чтобы закрыть Mini App
+            tg.BackButton.show();
+            tg.BackButton.onClick(() => {
+                tg.close(); // Закрываем Mini App, так как юзер пришел только почитать документ
+            });
+        }
+    }
+</script>
     
 function handleSuccessCopy() {
     const btn = document.getElementById('copy-btn');
@@ -619,6 +633,7 @@ function handleSuccessCopy() {
 updateStatus();
 loadKey();
 </script>
+
 
 
 
