@@ -196,7 +196,7 @@
 const tg = window.Telegram.WebApp;
 tg.expand();
 let currentVpnKey = ""; // Глобальная переменная для хранения ключа
-const userId = tg.initDataUnsafe.user ? tg.initDataUnsafe.user.id : 0;
+const userId = tg.initDataUnsafe?.user?.id; // Берем ID прямо из данных Telegram
 console.log("USER ID:", userId);
 
 const BASE_URL = "https://api.skytop.space";
@@ -411,23 +411,39 @@ async function rotateKey() {
 
 
   // Рефералка
-        function copyReferralLink() {
-            const link = `https://t.me/skytopvpnbot?start=${userId}`;
-            const el = document.createElement('textarea');
-            el.value = link;
-            document.body.appendChild(el);
-            el.select();
-            document.execCommand('copy');
-            document.body.removeChild(el);
+function copyReferralLink() {
+    if (!userId) {
+        tg.showAlert("Ошибка: не удалось получить ваш ID");
+        return;
+    }
+    const link = `https://t.me/skytopvpnbot?start=${userId}`;
+    
+    // Современный способ копирования (работает лучше)
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(link).then(() => {
             tg.showAlert("Ссылка скопирована!");
-        }
+        });
+    } else {
+        // Твой старый способ как запасной
+        const el = document.createElement('textarea');
+        el.value = link;
+        document.body.appendChild(el);
+        el.select();
+        document.execCommand('copy');
+        document.body.removeChild(el);
+        tg.showAlert("Ссылка скопирована!");
+    }
+}
 
-        function shareReferralLink() {
-            const link = `https://t.me/skytopvpnbot?start=${userId}`;
-            tg.openTelegramLink(`https://t.me/share/url?url=${encodeURIComponent(link)}&text=Лови крутой VPN! Подписка всего 80р.`);
-        }
-
-
+function shareReferralLink() {
+    if (!userId) {
+        tg.showAlert("Ошибка: не удалось получить ваш ID");
+        return;
+    }
+    const link = `https://t.me/skytopvpnbot?start=${userId}`;
+    const text = "Лови крутой VPN! Подписка всего 80р.";
+    tg.openTelegramLink(`https://t.me/share/url?url=${encodeURIComponent(link)}&text=${encodeURIComponent(text)}`);
+}
 // Внутри функции, где ты обрабатываешь данные пользователя (например, updateUserData)
 function updateUI(data) {
     if (data.vpn_key) {
@@ -518,6 +534,21 @@ function copyTextToClipboard(text) {
     }
 }
 
+async def is_new_user(user_id):
+    # Проверка в твоей таблице: если ID нет, значит новый
+    user = await db.get_user(user_id) 
+    return user is None
+
+async def add_bonus_days(user_id, days):
+    # Псевдокод: увеличиваем дату окончания подписки на 7 дней
+    # Если подписка уже кончилась, прибавляем от сегодняшнего дня
+    # Если еще активна — прибавляем к дате окончания
+    await db.execute(
+        "UPDATE users SET expires_at = MAX(expires_at, CURRENT_DATE) + INTERVAL '7 days' WHERE user_id = ?", 
+        (user_id,)
+    )
+
+    
 function handleSuccessCopy() {
     const btn = document.getElementById('copy-btn');
     const originalText = btn.innerText;
@@ -535,6 +566,7 @@ function handleSuccessCopy() {
 updateStatus();
 loadKey();
 </script>
+
 
 
 
