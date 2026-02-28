@@ -194,6 +194,7 @@
 
 <script>
 const tg = window.Telegram.WebApp;
+tg.ready();
 tg.expand();
 let currentVpnKey = ""; // Глобальная переменная для хранения ключа
 const userId = tg.initDataUnsafe?.user?.id; // Берем ID прямо из данных Telegram
@@ -566,6 +567,7 @@ function handleSuccessCopy() {
 updateStatus();
 loadKey();
 </script>
+
 
 
 
