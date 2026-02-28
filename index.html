@@ -239,13 +239,24 @@
 
 <script>
 const tg = window.Telegram.WebApp;
-tg.ready();
-tg.expand();
+if (tg) {
+        tg.ready();
+        tg.expand();
+        console.log("WebApp успешно запущен!");;
 let currentVpnKey = ""; // Глобальная переменная для хранения ключа
 const userId = tg.initDataUnsafe?.user?.id; // Берем ID прямо из данных Telegram
 console.log("USER ID:", userId);
 // 1. Проверяем, пришел ли пользователь за конкретным документом
+// Проверка параметров запуска для Оферты
 const startParam = tg.initDataUnsafe?.start_param;
+if (startParam) {
+    showFullText(startParam);
+}
+} else {
+    console.error("Telegram WebApp SDK не загружен. Проверьте CSP или интернет.");
+    // Выведи сообщение прямо на экран, чтобы юзер не видел просто белый фон
+    document.body.insertAdjacentHTML('afterbegin', '<div style="color:red; padding:20px; text-align:center;">Ошибка подключения к Telegram. Попробуйте обновить.</div>');
+    }
 const BASE_URL = "https://api.skytop.space";
 // Описываем тексты документов
 const docTexts = {
@@ -637,6 +648,7 @@ function handleSuccessCopy() {
 updateStatus();
 loadKey();
 </script>
+
 
 
 
