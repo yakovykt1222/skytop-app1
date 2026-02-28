@@ -189,7 +189,33 @@
     </div>
 </div>
        
- 
+<div id="rules-screen" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #f2f2f7; z-index: 1000; overflow-y: auto; padding: 20px; box-sizing: border-box;">
+    <button onclick="hideRules()" style="background: none; border: none; color: #007aff; font-size: 17px; font-weight: 600; cursor: pointer; margin-bottom: 20px; display: flex; align-items: center;">
+        ‹ Назад
+    </button>
+    
+    <div class="card" style="padding: 20px; border-radius: 15px; background: #fff;">
+        <h2 style="margin-top: 0;">Публичная оферта</h2>
+        <p style="font-size: 14px; color: #333; line-height: 1.5;">
+            Используя SkyTop VPN, вы соглашаетесь с правилами сервиса...
+        </p>
+        
+        <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;">
+        
+        <h2>Политика конфиденциальности</h2>
+        <p style="font-size: 14px; color: #333; line-height: 1.5;">
+            Мы не храним логи ваших посещений и не передаем данные третьим лицам. Ваш трафик зашифрован.
+        </p>
+        
+        <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;">
+        
+        <h2>Правила пользования</h2>
+        <ul style="font-size: 14px; color: #333; padding-left: 20px;">
+            <li>Запрещено использование для совершения противоправных действий.</li>
+            <li>Одна подписка — один активный ключ.</li>
+        </ul>
+    </div>
+    <div style="height: 50px;"></div> </div> 
 
 <script>
 const tg = window.Telegram.WebApp;
@@ -534,7 +560,17 @@ function copyTextToClipboard(text) {
     }
 }
 
+function showRules() {
+    document.getElementById('rules-screen').style.display = 'block';
+    // Чтобы кнопка "Назад" в самом Телеграме тоже работала (по желанию)
+    tg.BackButton.show();
+    tg.BackButton.onClick(() => hideRules());
+}
 
+function hideRules() {
+    document.getElementById('rules-screen').style.display = 'none';
+    tg.BackButton.hide();
+}
 
     
 function handleSuccessCopy() {
@@ -554,6 +590,7 @@ function handleSuccessCopy() {
 updateStatus();
 loadKey();
 </script>
+
 
 
 
