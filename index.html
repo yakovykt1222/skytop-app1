@@ -153,19 +153,19 @@
     <!-- КЛЮЧ -->
     <div class="card">
         <div class="title">Выберите сумму пополнения:</div>
-            <div class="amounts-grid">
-                <button class="opt-btn" onclick="selectPrice(80, this)">80 ₽</button>
-                <button class="opt-btn" onclick="selectPrice(160, this)">160 ₽</button>
-                <button class="opt-btn" onclick="selectPrice(240, this)">240 ₽</button>
-                <button class="opt-btn" onclick="selectPrice(320, this)">320 ₽</button>
-                <button class="opt-btn" onclick="selectPrice(400, this)">400 ₽</button>
-                <button class="opt-btn" onclick="selectPrice(480, this)">480 ₽</button>
-                <button class="opt-btn" onclick="selectPrice(560, this)">560 ₽</button>
-                <button class="opt-btn" onclick="selectPrice(640, this)">640 ₽</button>
-                <button class="opt-btn" onclick="selectPrice(720, this)">720 ₽</button>
-            </div>
-            <button class="btn-confirm" id="confirm-pay-btn" onclick="processPayment()">Подтвердить и оплатить</button>
+        <div class="amounts-grid">
+            <button class="opt-btn" onclick="selectPrice(80, this)">80 ₽</button>
+            <button class="opt-btn" onclick="selectPrice(160, this)">160 ₽</button>
+            <button class="opt-btn" onclick="selectPrice(240, this)">240 ₽</button>
+            <button class="opt-btn" onclick="selectPrice(320, this)">320 ₽</button>
+            <button class="opt-btn" onclick="selectPrice(400, this)">400 ₽</button>
+            <button class="opt-btn" onclick="selectPrice(480, this)">480 ₽</button>
+            <button class="opt-btn" onclick="selectPrice(560, this)">560 ₽</button>
+            <button class="opt-btn" onclick="selectPrice(640, this)">640 ₽</button>
+            <button class="opt-btn" onclick="selectPrice(720, this)">720 ₽</button>
         </div>
+        <button class="btn-confirm" id="confirm-pay-btn" onclick="processPayment()">Подтвердить и оплатить</button>
+    </div>
         
         <div class="title">Ваш VPN ключ</div>
 
@@ -568,6 +568,7 @@ function handleSuccessCopy() {
 updateStatus();
 loadKey();
 </script>
+
 
 
 
