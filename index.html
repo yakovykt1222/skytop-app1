@@ -246,14 +246,16 @@ console.log("USER ID:", userId);
 // 1. Проверяем, пришел ли пользователь за конкретным документом
 const startParam = tg.initDataUnsafe?.start_param;
 const BASE_URL = "https://api.skytop.space";
-
+// Описываем тексты документов
+const docTexts = {
+    agreement: "<h1>Согласие</h1><p>Ваш текст...</p>",
+    offer: "<h1>Оферта</h1><p>1. Активация сразу...<br>2. Возврат при поломке...</p>",
+    privacy: "<h1>Политика</h1><p>Мы не храним логи...</p>"
+};
 let vpnKey = "";
 let keyVisible = false;
 let selectedPrice = 0;
-if (startParam) {
-        // Если есть параметр (agreement, offer или privacy), сразу показываем текст
-        showFullText(startParam);
-    }
+
 // ===== СТАТУС =====
 async function updateStatus() {
     try {
@@ -583,11 +585,6 @@ function copyTextToClipboard(text) {
     }
 }
 
-const texts = {
-    agreement: "<h1>Согласие</h1><p>Тут текст вашего согласия...</p>",
-    offer: "<h1>Публичная оферта</h1><p>1. Подписка активируется сразу... <br>2. Возврат средств возможен при неисправности...</p>",
-    privacy: "<h1>Политика конфиденциальности</h1><p>Мы не храним логи ваших действий...</p>"
-};
 
 // 2. Функция отображения текста
     function showFullText(type) {
@@ -614,6 +611,12 @@ const texts = {
             });
         }
     }
+
+    if (startParam) {
+        // Если есть параметр (agreement, offer или privacy), сразу показываем текст
+        showFullText(startParam);
+    }
+
 </script>
     
 function handleSuccessCopy() {
@@ -633,6 +636,7 @@ function handleSuccessCopy() {
 updateStatus();
 loadKey();
 </script>
+
 
 
 
