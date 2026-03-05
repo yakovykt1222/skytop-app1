@@ -1,28 +1,29 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
-<title>Opening VPN</title>
+<meta charset="utf-8">
+<title>Open VPN</title>
 </head>
 
 <body>
 
 <script>
-
 const params = new URLSearchParams(window.location.search);
 const key = params.get("key");
 
 if (key) {
-
-    const link = document.createElement("a");
-    link.href = key;
-    document.body.appendChild(link);
-    link.click();
-
+    setTimeout(() => {
+        window.location.href = key;
+    }, 300);
+} else {
+    document.body.innerText = "Ключ не найден";
 }
-
 </script>
 
+Открываем VPN...
+
+</body>
+</html>
 Открываем VPN...
 
 </body>
