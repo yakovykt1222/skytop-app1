@@ -5,27 +5,22 @@
 <title>Opening VPN</title>
 </head>
 
-<body style="background:#111;color:white;text-align:center;font-family:sans-serif;padding-top:40vh;">
+<body>
 
 <script>
+
 const params = new URLSearchParams(window.location.search);
 const key = params.get("key");
 
 if (key) {
-    const encoded = encodeURIComponent(key);
-    const url = "v2raytun://import/" + encoded;
 
-    // основной способ
-    const iframe = document.createElement("iframe");
-    iframe.style.display = "none";
-    iframe.src = url;
-    document.body.appendChild(iframe);
+    const link = document.createElement("a");
+    link.href = key;
+    document.body.appendChild(link);
+    link.click();
 
-    // fallback
-    setTimeout(() => {
-        window.location.href = url;
-    }, 800);
 }
+
 </script>
 
 Открываем VPN...
