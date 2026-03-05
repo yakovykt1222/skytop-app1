@@ -234,7 +234,7 @@ let selectedPrice = 0;
 // ===== СТАТУС =====
 async function updateStatus() {
     try {
-        const res = await fetch(`${BASE_URL}/get-status?user_id=${userId}`);
+        const res = await fetch(`${BASE_URL}/get-status?user_id=${userId}&t=${Date.now()}`);
         const data = await res.json();
 
         const statusEl = document.getElementById("sub-status");
@@ -245,7 +245,7 @@ async function updateStatus() {
         if (data.time_left && data.time_left !== "Истекла") {
             statusEl.innerText = "Активна";
             statusEl.style.color = "#34c759";
-            dateEl.innerText = "Осталось: " + data.time_left;
+            dateEl.innerText = "До: " + data.expiry + " (осталось " + data.time_left + ")";
         } else {
             statusEl.innerText = "Не активна";
             statusEl.style.color = "#ff3b30";
@@ -287,18 +287,7 @@ async function loadKey() {
         console.log(e);
     }
 }
-// ===== ОБНОВЛЕНИЕ ПРИ ВОЗВРАЩЕНИИ В MINI APP =====
-document.addEventListener("visibilitychange", () => {
-    if (!document.hidden) {
-        updateStatus();
-        loadKey();
-    }
-});
-setInterval(() => {
-    updateStatus();
-    loadKey();
-}, 5000);
-    
+
 function toggleKey() {
     const box = document.getElementById("key-box");
     const btn = document.getElementById("toggle-key-btn");
@@ -597,9 +586,23 @@ function handleSuccessCopy() {
         btn.innerText = originalText;
     }, 2000);
 }    
+
+// ===== ОБНОВЛЕНИЕ ПРИ ВОЗВРАЩЕНИИ В MINI APP =====
+document.addEventListener("visibilitychange", () => {
+    if (!document.hidden) {
+        updateStatus();
+        loadKey();
+    }
+});
+setInterval(() => {
+    updateStatus();
+    loadKey();
+}, 5000);
+    
 // ===== ЗАПУСК =====
 updateStatus();
 loadKey();
 </script>
+
 
 
