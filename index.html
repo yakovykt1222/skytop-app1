@@ -327,31 +327,23 @@ function toggleKey() {
 }
 
 async function openInApp() {
-    try {
-        const user = Telegram.WebApp.initDataUnsafe.user;
-        const userId = user.id;
 
-        const res = await fetch(`https://api.skytop.space/get-status?user_id=${userId}&t=` + Date.now());
-        const data = await res.json();
+    const user = Telegram.WebApp.initDataUnsafe.user;
+    const userId = user.id;
 
-        const key = data.key || data.vpn_key;
+    const res = await fetch(`https://api.skytop.space/get-status?user_id=${userId}&t=` + Date.now());
+    const data = await res.json();
 
-        if (!key) {
-            alert("Ключ не найден");
-            return;
-        }
+    const key = data.key || data.vpn_key;
 
-        // создаем скрытую ссылку
-        const link = document.createElement("a");
-        link.href = key;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-
-    } catch (e) {
-        alert("Ошибка открытия VPN");
-        console.log(e);
+    if (!key) {
+        alert("Ключ не найден");
+        return;
     }
+    window.open(
+          "https://yakovykt1222.github.io/skytop-app1/open.html?key=" + encodeURIComponent(key),
+          "_blank"
+    );
 }
 
 // ===== ОПЛАТА =====
@@ -636,6 +628,7 @@ setInterval(() => {
 updateStatus();
 loadKey();
 </script>
+
 
 
 
