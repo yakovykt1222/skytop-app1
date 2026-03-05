@@ -307,10 +307,14 @@ function toggleKey() {
 }
 
 function openInApp() {
-    if (!vpnKey || vpnKey === "" || vpnKey.includes('•')) {
+    if (!vpnKey) {
         alert("Ключ не загружен");
         return;
     }
+
+    const url = "https://yakovykt1222.github.io/skytop-app1/open.html?key=" + encodeURIComponent(vpnKey);
+    Telegram.WebApp.openLink(url);
+}
 
     const url = "https://yakovykt1222.github.io/open.html?key=" + encodeURIComponent(vpnKey);
 
@@ -598,6 +602,7 @@ setInterval(() => {
 updateStatus();
 loadKey();
 </script>
+
 
 
 
