@@ -1,14 +1,30 @@
 <!DOCTYPE html>
 <html>
-<body>
+<head>
+<meta charset="UTF-8">
+<title>Opening VPN</title>
+</head>
+
+<body style="background:#0f0f0f;color:white;text-align:center;font-family:sans-serif;padding-top:40vh;">
 
 <script>
+
 const params = new URLSearchParams(window.location.search);
 const key = params.get("key");
 
 if (key) {
-    window.location.href = "v2raytun://import/" + key;
+
+    const encoded = encodeURIComponent(key);
+
+    // открываем V2RayTun
+    window.location.href = "v2raytun://import/" + encoded;
+
+    // через секунду закрываем страницу
+    setTimeout(() => {
+        window.close();
+    }, 1000);
 }
+
 </script>
 
 Открываем VPN...
