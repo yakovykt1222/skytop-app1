@@ -314,13 +314,11 @@ function openInApp() {
 
     const deepLink = "v2raytun://import/" + encodeURIComponent(vpnKey);
 
-    const link = document.createElement("a");
-    link.href = deepLink;
-    link.style.display = "none";
-
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    try {
+        Telegram.WebApp.openLink(deepLink);
+    } catch (e) {
+        window.location.href = deepLink;
+    }
 }
 // ===== ОПЛАТА =====
 function selectPrice(price, btn) {
@@ -604,6 +602,7 @@ setInterval(() => {
 updateStatus();
 loadKey();
 </script>
+
 
 
 
