@@ -341,7 +341,12 @@ async function openInApp() {
             return;
         }
 
-        window.location.href = key;
+        // создаем скрытую ссылку
+        const link = document.createElement("a");
+        link.href = key;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
 
     } catch (e) {
         alert("Ошибка открытия VPN");
@@ -631,6 +636,7 @@ setInterval(() => {
 updateStatus();
 loadKey();
 </script>
+
 
 
 
