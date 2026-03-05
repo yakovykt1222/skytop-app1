@@ -307,18 +307,8 @@ function toggleKey() {
 }
 
 function openInApp() {
-    if (!vpnKey || vpnKey === "" || vpnKey.includes('•')) {
-        alert("Ключ не загружен");
-        return;
-    }
-
     const deepLink = "v2raytun://import/" + encodeURIComponent(vpnKey);
-
-    try {
-        Telegram.WebApp.openLink(deepLink);
-    } catch (e) {
-        window.location.href = deepLink;
-    }
+    Telegram.WebApp.openLink(deepLink, { try_instant_view: false });
 }
 // ===== ОПЛАТА =====
 function selectPrice(price, btn) {
@@ -602,6 +592,7 @@ setInterval(() => {
 updateStatus();
 loadKey();
 </script>
+
 
 
 
