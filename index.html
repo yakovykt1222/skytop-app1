@@ -287,6 +287,13 @@ async function loadKey() {
         console.log(e);
     }
 }
+// ===== ОБНОВЛЕНИЕ ПРИ ВОЗВРАЩЕНИИ В MINI APP =====
+document.addEventListener("visibilitychange", () => {
+    if (!document.hidden) {
+        updateStatus();
+        loadKey();
+    }
+});
 
 function toggleKey() {
     const box = document.getElementById("key-box");
@@ -590,3 +597,4 @@ function handleSuccessCopy() {
 updateStatus();
 loadKey();
 </script>
+
