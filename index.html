@@ -586,7 +586,8 @@ function handleSuccessCopy() {
         btn.innerText = originalText;
     }, 2000);
 }    
-
+updateStatus();
+loadKey();
 // ===== ОБНОВЛЕНИЕ ПРИ ВОЗВРАЩЕНИИ В MINI APP =====
 document.addEventListener("visibilitychange", () => {
     if (!document.hidden) {
@@ -603,6 +604,7 @@ setInterval(() => {
 updateStatus();
 loadKey();
 </script>
+
 
 
 
