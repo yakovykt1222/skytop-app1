@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Открытие VPN</title>
+</head>
+<body>
+
+<script>
+const params = new URLSearchParams(window.location.search);
+const key = params.get("key");
+
+if (key) {
+    const link = "v2raytun://import/" + decodeURIComponent(key);
+    window.location.href = link;
+} else {
+    document.body.innerText = "VPN ключ не найден";
+}
+</script>
+
+</body>
+</html>
