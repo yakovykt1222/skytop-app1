@@ -589,6 +589,11 @@ function handleSuccessCopy() {
 updateStatus();
 loadKey();
 // ===== ОБНОВЛЕНИЕ ПРИ ВОЗВРАЩЕНИИ В MINI APP =====
+document.addEventListener("DOMContentLoaded", () => {
+    updateStatus();
+    loadKey();
+});
+
 document.addEventListener("visibilitychange", () => {
     if (!document.hidden) {
         updateStatus();
@@ -604,6 +609,7 @@ setInterval(() => {
 updateStatus();
 loadKey();
 </script>
+
 
 
 
