@@ -294,7 +294,11 @@ document.addEventListener("visibilitychange", () => {
         loadKey();
     }
 });
-
+setInterval(() => {
+    updateStatus();
+    loadKey();
+}, 5000);
+    
 function toggleKey() {
     const box = document.getElementById("key-box");
     const btn = document.getElementById("toggle-key-btn");
@@ -597,4 +601,5 @@ function handleSuccessCopy() {
 updateStatus();
 loadKey();
 </script>
+
 
