@@ -344,7 +344,7 @@ async function openInApp() {
 
         const url = "https://yakovykt1222.github.io/skytop-app1/open.html?key=" + encodeURIComponent(key);
 
-        window.location.href = url;
+        Telegram.WebApp.openLink(url, { try_instant_view: false });
 
     } catch (e) {
         alert("Ошибка открытия VPN");
@@ -633,6 +633,7 @@ setInterval(() => {
 updateStatus();
 loadKey();
 </script>
+
 
 
 
