@@ -6,7 +6,6 @@
 </head>
 
 <body>
-
 <p>Открываем VPN...</p>
 
 <script>
@@ -17,14 +16,16 @@ if (!key) {
     document.body.innerText = "Ключ не найден";
 } else {
 
-    // основной способ
-    window.location.href = key;
+    // пробуем открыть через iframe (лучше работает на iOS)
+    const iframe = document.createElement("iframe");
+    iframe.style.display = "none";
+    iframe.src = key;
+    document.body.appendChild(iframe);
 
-    // повторная попытка для iOS
+    // fallback
     setTimeout(() => {
-        window.location = key;
-    }, 500);
-
+        Telegram.WebApp.openLink(url);;
+    }, 800);
 }
 </script>
 
