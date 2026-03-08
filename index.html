@@ -328,12 +328,21 @@ function toggleKey() {
 
 async function openInApp() {
     try {
-        const user = Telegram.WebApp.initDataUnsafe.user;
-        const userId = user.id;
+
+        if (!Telegram.WebApp.initDataUnsafe?.user) {
+            alert("Откройте приложение через Telegram");
+            return;
+        }
+
+        const userId = Telegram.WebApp.initDataUnsafe.user.id;
 
         const res = await fetch(`https://api.skytop.space/get-status?user_id=${userId}`);
-        const data = await res.json();
 
+        if (!res.ok) {
+            throw new Error("API error: " + res.status);
+        }
+
+        const data = await res.json();
         const key = data.key || data.vpn_key;
 
         if (!key) {
@@ -341,13 +350,13 @@ async function openInApp() {
             return;
         }
 
-        const url = "https://yakovykt1222.github.io/skytop-app1/open.html?key=" + encodeURIComponent(key);
+        const url = `https://yakovykt1222.github.io/skytop-app1/open.html?key=${encodeURIComponent(key)}`;
 
         window.open(url, "_blank");
 
     } catch (e) {
+        console.error(e);
         alert("Ошибка открытия VPN");
-        console.log(e);
     }
 }
 // ===== ОПЛАТА =====
@@ -632,6 +641,7 @@ setInterval(() => {
 updateStatus();
 loadKey();
 </script>
+
 
 
 
