@@ -190,9 +190,13 @@
     <div id="key-box" class="key-box">
         ••••••••••••••••••••••••••
     </div>
-    <div style="display:flex; gap:8px; margin-top: 10px;">
+        <div style="display:flex; gap:8px; margin-top: 10px;">
         <button class="btn-ref" onclick="toggleKey()" id="toggle-key-btn" style="display:none;">👁 Показать</button>
         <button class="btn-ref" onclick="copyKey()" id="copy-btn" style="display:none;">📋 Копировать</button>
+        <button class="btn-ref" onclick="openVPN()" id="open-app-btn" style="display:none;">🚀 Открыть</button>
+    </div>
+    <div class="notice">
+    ⚠️ Важно: перед тем как нажать <b>Открыть</b>, сначала нажмите <b>Сменить ключ</b>.
     </div>
     <button class="btn-primary" onclick="rotateKey()" id="rotate-btn" style="display:none; margin-top: 10px; width: 100%;">
         🔄 Сменить ключ
@@ -626,6 +630,7 @@ setInterval(() => {
 updateStatus();
 loadKey();
 </script>
+
 
 
 
