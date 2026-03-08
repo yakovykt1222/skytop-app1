@@ -3,30 +3,48 @@
 <head>
 <meta charset="utf-8">
 <title>Open VPN</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+body{
+font-family: Arial;
+text-align:center;
+padding-top:60px;
+background:#0f172a;
+color:white;
+}
+
+button{
+font-size:20px;
+padding:15px 30px;
+border:none;
+border-radius:10px;
+background:#22c55e;
+color:white;
+}
+</style>
 </head>
 
 <body>
-<p>Открываем VPN...</p>
+
+<h2>Подключение VPN</h2>
+<p>Нажмите кнопку чтобы открыть приложение</p>
+
+<button id="open">Открыть VPN</button>
 
 <script>
 const params = new URLSearchParams(window.location.search);
 const key = params.get("key");
 
-if (!key) {
-    document.body.innerText = "Ключ не найден";
-} else {
+document.getElementById("open").onclick = () => {
 
-    // пробуем открыть через iframe (лучше работает на iOS)
-    const iframe = document.createElement("iframe");
-    iframe.style.display = "none";
-    iframe.src = key;
-    document.body.appendChild(iframe);
+    if (!key) {
+        alert("Ключ не найден");
+        return;
+    }
 
-    // fallback
-    setTimeout(() => {
-        Telegram.WebApp.openLink(url);;
-    }, 800);
-}
+    Telegram.WebApp.openLink(url);
+
+};
 </script>
 
 </body>
