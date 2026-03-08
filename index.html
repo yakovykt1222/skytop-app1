@@ -325,28 +325,7 @@ function toggleKey() {
     }
 }
 
-async function openVPN() {
-    try {
 
-        const userId = Telegram.WebApp.initDataUnsafe.user.id;
-
-        const res = await fetch(`https://api.skytop.space/get-status?user_id=${userId}`);
-        const data = await res.json();
-
-        const key = data.key || data.vpn_key;
-
-        if (!key) {
-            alert("Ключ не найден");
-            return;
-        }
-
-        Telegram.WebApp.openLink(key);
-
-    } catch (e) {
-        alert("Ошибка открытия VPN");
-        console.log(e);
-    }
-}
 // ===== ОПЛАТА =====
 function selectPrice(price, btn) {
     selectedPrice = price;
@@ -629,6 +608,7 @@ setInterval(() => {
 updateStatus();
 loadKey();
 </script>
+
 
 
 
