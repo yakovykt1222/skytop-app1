@@ -252,31 +252,28 @@ let keyVisible = false;
 let selectedPrice = 0;
 
 // ===== СТАТУС =====
-async function updateStatus() {
+async function openVPN() {
     try {
-        const res = await fetch(`${BASE_URL}/get-status?user_id=${userId}&t=${Date.now()}`);
+
+        const userId = Telegram.WebApp.initDataUnsafe.user.id;
+
+        const res = await fetch(`https://api.skytop.space/get-status?user_id=${userId}`);
         const data = await res.json();
 
-        const statusEl = document.getElementById("sub-status");
-        const dateEl = document.getElementById("sub-date");
+        const key = data.key || data.vpn_key;
 
-        if (!statusEl || !dateEl) return;
-
-        if (data.time_left && data.time_left !== "Истекла") {
-            statusEl.innerText = "Активна";
-            statusEl.style.color = "#34c759";
-            dateEl.innerText = "До: " + data.expiry + " (осталось " + data.time_left + ")";
-        } else {
-            statusEl.innerText = "Не активна";
-            statusEl.style.color = "#ff3b30";
-            dateEl.innerText = "Пополните баланс";
+        if (!key) {
+            alert("Ключ не найден");
+            return;
         }
 
+        Telegram.WebApp.openLink(key);
+
     } catch (e) {
+        alert("Ошибка открытия VPN");
         console.log(e);
     }
 }
-
 // ===== КЛЮЧ =====
 async function loadKey() {
     try {
@@ -633,6 +630,7 @@ setInterval(() => {
 updateStatus();
 loadKey();
 </script>
+
 
 
 
