@@ -284,7 +284,6 @@ async function loadKey() {
 
         const statusEl = document.getElementById("key-status");
         const toggleBtn = document.getElementById("toggle-key-btn");
-        const openBtn = document.getElementById("open-app-btn");
         const rotateBtn = document.getElementById("rotate-btn");
         const copyBtn = document.getElementById("copy-btn"); // Добавляем поиск кнопки копирования
         if (data.vpn_key_status === "Активен") {
@@ -292,7 +291,6 @@ async function loadKey() {
             statusEl.innerText = "Подписка активна";
             statusEl.style.color = "#34c759";
             toggleBtn.style.display = "block";
-            openBtn.style.display = "block";
             rotateBtn.style.display = "block";
             if (copyBtn) copyBtn.style.display = "block"; // ПОКАЗЫВАЕМ КНОПКУ КОПИРОВАНИЯ
         } else {
@@ -608,6 +606,7 @@ setInterval(() => {
 updateStatus();
 loadKey();
 </script>
+
 
 
 
