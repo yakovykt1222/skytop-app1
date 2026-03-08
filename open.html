@@ -7,24 +7,26 @@
 
 <body>
 
+<p>Открываем VPN...</p>
+
 <script>
 const params = new URLSearchParams(window.location.search);
 const key = params.get("key");
 
-if (key) {
-    setTimeout(() => {
-        window.location.href = key;
-    }, 300);
-} else {
+if (!key) {
     document.body.innerText = "Ключ не найден";
+} else {
+
+    // основной способ
+    window.location.href = key;
+
+    // повторная попытка для iOS
+    setTimeout(() => {
+        window.location = key;
+    }, 500);
+
 }
 </script>
-
-Открываем VPN...
-
-</body>
-</html>
-Открываем VPN...
 
 </body>
 </html>
