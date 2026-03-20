@@ -162,7 +162,7 @@
         <div class="title">Ваша подписка</div>
         <div id="sub-status" class="status-text">Загрузка...</div>
         <div id="sub-date" class="expire-date">проверяем данные...</div>
-        <button id="pay-btn" class="btn-primary" style="display:none;">
+        <button id="pay-btn" class="btn-primary" onclick="document.querySelector('.amounts-grid').scrollIntoView({behavior: 'smooth'})">
             💳 Продлить подписку
         </button>
     </div>
@@ -252,89 +252,80 @@ let selectedPrice = 0;
 
 // ===== СТАТУС =====
 // Единая функция обновления данных
-async function updateDashboard() {
-    try {
-        // Делаем один запрос вместо двух
-        const res = await fetch(`${BASE_URL}/get-status?user_id=${userId}&t=${Date.now()}`);
-        
-        // Если сервер ответил ошибкой (404/500), обрабатываем это, чтобы JS не упал
-        if (!res.ok) {
-            showExpiredUI(); // Показываем как истекшую, если юзер не найден
-            return;
-        }
-
-        const data = await res.json();
-        
-        // Элементы интерфейса
-        const statusEl = document.getElementById("sub-status");
-        const dateEl = document.getElementById("sub-date");
-        const keyStatusEl = document.getElementById("key-status");
-        const toggleBtn = document.getElementById("toggle-key-btn");
-        const rotateBtn = document.getElementById("rotate-btn");
-        const copyBtn = document.getElementById("copy-btn");
-        const keyBox = document.getElementById("key-box");
-
-        // 1. ПРОВЕРКА ПОДПИСКИ (Используем флаг active из нового Python кода)
-        if (data.active === true || (data.time_left && data.time_left !== "Истекла")) {
-            // --- ПОДПИСКА АКТИВНА ---
-            vpnKey = data.vpn_key;
-            currentVpnKey = data.vpn_key; // Для функции копирования
-
-            statusEl.innerText = "Активна";
-            statusEl.style.color = "#34c759";
-            
-            // Красивое отображение даты (отсекаем лишнее если ISO)
-            let displayDate = data.expiry ? data.expiry.split('T')[0] : "неизвестно";
-            dateEl.innerText = `До: ${displayDate} (${data.time_left})`;
-
-            keyStatusEl.innerText = "Подписка активна";
-            keyStatusEl.style.color = "#34c759";
-
-            // Показываем управление ключом
-            if (toggleBtn) toggleBtn.style.display = "block";
-            if (rotateBtn) rotateBtn.style.display = "block";
-            if (copyBtn) copyBtn.style.display = "block";
-        } else {
-            // --- ПОДПИСКА ИСТЕКЛА ---
-            showExpiredUI();
-        }
-
-    } catch (e) {
-        console.error("Ошибка API:", e);
-        // В случае ошибки сети не вешаем интерфейс, а пишем статус
-        document.getElementById("sub-status").innerText = "Ошибка загрузки";
-    }
-}
-
-// Функция для отображения состояния "Подписка неактивна"
-function showExpiredUI() {
+// Основная функция загрузки данных
+async function refreshData() {
     const statusEl = document.getElementById("sub-status");
     const dateEl = document.getElementById("sub-date");
     const keyStatusEl = document.getElementById("key-status");
-    const keyBox = document.getElementById("key-box");
-    
-    if (statusEl) {
-        statusEl.innerText = "Не активна";
-        statusEl.style.color = "#ff3b30";
-    }
-    if (dateEl) dateEl.innerText = "Пополните баланс для доступа к VPN";
-    
-    if (keyStatusEl) {
-        keyStatusEl.innerText = "Подписка истекла";
-        keyStatusEl.style.color = "#ff3b30";
-    }
+    const toggleBtn = document.getElementById("toggle-key-btn");
+    const rotateBtn = document.getElementById("rotate-btn");
+    const copyBtn = document.getElementById("copy-btn");
+    const payBtn = document.getElementById("pay-btn");
 
-    // Скрываем секретные данные и кнопки
-    if (keyBox) keyBox.style.display = "none";
-    document.getElementById("toggle-key-btn").style.display = "none";
-    document.getElementById("rotate-btn").style.display = "none";
-    document.getElementById("copy-btn").style.display = "none";
-    vpnKey = "";
+    try {
+        const res = await fetch(`${BASE_URL}/get-status?user_id=${userId}&t=${Date.now()}`);
+        
+        // Если юзер не найден или сервер упал — считаем подписку неактивной
+        if (!res.ok) throw new Error("User not found or Server error");
+
+        const data = await res.json();
+
+        // Проверяем статус (совместимо с вашим новым Python кодом)
+        if (data.active === true || (data.time_left && data.time_left !== "Истекла")) {
+            // --- СОСТОЯНИЕ: АКТИВНО ---
+            statusEl.innerText = "Активна";
+            statusEl.style.color = "#34c759";
+            
+            let expiryDate = data.expiry ? data.expiry.split('T')[0] : "активна";
+            dateEl.innerText = `До: ${expiryDate} (${data.time_left})`;
+            
+            if (payBtn) payBtn.style.display = "none"; // Прячем кнопку продления, если всё ок
+
+            // Настройка ключа
+            vpnKey = data.vpn_key;
+            currentVpnKey = data.vpn_key;
+            keyStatusEl.innerText = "Подписка активна";
+            keyStatusEl.style.color = "#34c759";
+            
+            toggleBtn.style.display = "block";
+            rotateBtn.style.display = "block";
+            if (copyBtn) copyBtn.style.display = "block";
+        } else {
+            // --- СОСТОЯНИЕ: ИСТЕКЛА ---
+            setExpiredUI();
+        }
+
+    } catch (e) {
+        console.error("Ошибка при обновлении:", e);
+        setExpiredUI(); // При любой ошибке показываем экран покупки
+        statusEl.innerText = "Не активна"; 
+    }
 }
 
-// Переназначаем старые вызовы на новую функцию
-async function updateStatus() { await updateDashboard(); }
-async function loadKey() { await updateDashboard(); }
+// Вспомогательная функция для "пустого" интерфейса
+function setExpiredUI() {
+    document.getElementById("sub-status").innerText = "Не активна";
+    document.getElementById("sub-status").style.color = "#ff3b30";
+    document.getElementById("sub-date").innerText = "Пожалуйста, пополните баланс";
+    
+    const keyStatus = document.getElementById("key-status");
+    if (keyStatus) {
+        keyStatus.innerText = "Ключ временно недоступен";
+        keyStatus.style.color = "#8e8e93";
+    }
+
+    // Показываем кнопку продления и скрываем кнопки управления ключом
+    if (document.getElementById("pay-btn")) document.getElementById("pay-btn").style.display = "block";
+    document.getElementById("toggle-key-btn").style.display = "none";
+    document.getElementById("rotate-btn").style.display = "none";
+    if (document.getElementById("copy-btn")) document.getElementById("copy-btn").style.display = "none";
+    document.getElementById("key-box").style.display = "none";
+}
+
+// Заменяем старые вызовы на новую функцию
+async function updateStatus() { await refreshData(); }
+async function loadKey() { await refreshData(); }
+    
 function toggleKey() {
     const box = document.getElementById("key-box");
     const btn = document.getElementById("toggle-key-btn");
